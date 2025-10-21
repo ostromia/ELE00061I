@@ -59,50 +59,41 @@ static void MX_USART2_UART_Init(void);
 
 /* USER CODE END 0 */
 
+
+
 /**
   * @brief  The application entry point.
   * @retval int
   */
-int main(void)
-{
+int main(void) {
+//	USER CODE 1
 
-  /* USER CODE BEGIN 1 */
+//	MCU CONFIGURATION
 
-  /* USER CODE END 1 */
+//	Reset of all peripherals, Initialises the Flash interface and the Systick
+	HAL_Init();
 
-  /* MCU Configuration--------------------------------------------------------*/
+//	USER CODE Init
 
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+//	Configure the system clock
+	SystemClock_Config();
 
-  /* USER CODE BEGIN Init */
+//	USER CODE SysInit
 
-  /* USER CODE END Init */
+//	Initialise all configured peripherals
+	MX_GPIO_Init();
+	MX_USART2_UART_Init();
 
-  /* Configure the system clock */
-  SystemClock_Config();
+//	USER CODE 2
 
-  /* USER CODE BEGIN SysInit */
+	while (1) {
+		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
+		HAL_Delay(1000);
 
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_USART2_UART_Init();
-  /* USER CODE BEGIN 2 */
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+	}
 }
+
+
 
 /**
   * @brief System Clock Configuration
