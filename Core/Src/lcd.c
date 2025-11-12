@@ -138,7 +138,11 @@ void LCR_LCD_DefineChar (int ch, char *data) {
 	LCR_LCD_Write(WRITE_INSTRUCTION, 0x80);
 }
 
-
+void lcd_set_cursor(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7, int x, int y) {
+    while(isbusy());
+    uint8_t data = (y == 0) ? (0x80 | (x & 0x3F)) : (0xC0 | (x & 0x3F));
+    write_lcd_byte(E, D4, D5, D6, D7, WRITE_INSTRUCTION, data);
+}
 
 void lcd_init(GPIO RS, GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7) {
 	delay(15000);

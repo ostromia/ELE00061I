@@ -11,7 +11,7 @@ void setup() {
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOFEN;
 
 	lcd_init(RS, E, D4, D5, D6, D7);
-	LCR_LCD_GoToXY(0, 0);
+	lcd_set_cursor(E, D4, D5, D6, D7, 0, 0);
 	LCR_LCD_WriteString("Hello, World!");
 }
 
