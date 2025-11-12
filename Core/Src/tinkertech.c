@@ -1,7 +1,16 @@
 #include "tinkertech.h"
 
 void setup() {
-	LCR_LCD_Init();
+	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
+	GPIO E  = { LCD_E_GPIO_Port,  LCD_E_Pin  };
+	GPIO D4 = { LCD_D4_GPIO_Port, LCD_D4_Pin };
+	GPIO D5 = { LCD_D5_GPIO_Port, LCD_D5_Pin };
+	GPIO D6 = { LCD_D6_GPIO_Port, LCD_D6_Pin };
+	GPIO D7 = { LCD_D7_GPIO_Port, LCD_D7_Pin };
+
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOFEN;
+
+	lcd_init(RS, E, D4, D5, D6, D7);
 	LCR_LCD_GoToXY(0, 0);
 	LCR_LCD_WriteString("Hello, World!");
 }

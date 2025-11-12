@@ -1,6 +1,10 @@
 #ifndef __LCD_H
 #define __LCD_H
 
+#include "gpio.h"
+
+void lcd_init(GPIO RS, GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7);
+
 extern void LCR_MicroDelay (uint32_t delay);
 
 void LCD_Set_Data(uint8_t data);
