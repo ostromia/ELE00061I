@@ -2,6 +2,36 @@
 #include <lcd.h>
 #include <stdbool.h>
 
+#define LCD_DELAY_CONST 500
+
+typedef struct {
+    GPIO_TypeDef* port;
+    uint16_t pin;
+} GPIO;
+
+GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
+GPIO E  = { LCD_E_GPIO_Port,  LCD_E_Pin  };
+GPIO D4 = { LCD_D4_GPIO_Port, LCD_D4_Pin };
+GPIO D5 = { LCD_D5_GPIO_Port, LCD_D5_Pin };
+GPIO D6 = { LCD_D6_GPIO_Port, LCD_D6_Pin };
+GPIO D7 = { LCD_D7_GPIO_Port, LCD_D7_Pin };
+
+void LCD_Set_RS(uint8_t data) {
+	RS.port->BSRR = data ? RS.pin : RS.pin << 16;
+}
+
+void LCD_Set_E(uint8_t data) {
+	E.port->BSRR = data ? E.pin : E.pin << 16;
+}
+
+void LCD_Set_Data(uint8_t data) {
+    D4.port->BSRR = (data & 0x1) ? D4.pin : D4.pin << 16;
+    D5.port->BSRR = (data & 0x2) ? D5.pin : D5.pin << 16;
+    D6.port->BSRR = (data & 0x4) ? D6.pin : D6.pin << 16;
+    D7.port->BSRR = (data & 0x8) ? D7.pin : D7.pin << 16;
+}
+
+
 // LCR_MicroDelay attempts to delay by the requested number of microseconds
 // The factors were determined experimentally for the Nucleo-G071RB board
 // running at 64 MHz with no compiler optimisations.
@@ -25,33 +55,15 @@ void LCR_MicroDelay (uint32_t delayInMicroSeconds) {
 // also less likely to be interrupted by a reset in the middle of an operation,
 // and this can upset it (I'm still not entirely clear why this happens, or
 // how to kick it out of whatever random state it gets into at these times).
-#define LCD_DELAY_CONST 500
 
-void LCD_Set_Data(uint8_t data) {
-	// This takes the lowest four bits in data and puts them on the
-	// relevant pins of the LCD (LCD_D4 to LCD_D7) in four-bit mode.
-	GPIOA->BSRR = (data & 0x1) ? 0x1 << 12 : 0x1 << 28;
-	GPIOB->BSRR = (data & 0x2) ? 0x1 << 0 : 0x1 << 16;
-	GPIOB->BSRR = (data & 0x4) ? 0x1 << 7 : 0x1 << 23;
-	GPIOB->BSRR = (data & 0x8) ? 0x1 << 6 : 0x1 << 22;
-}
-void LCD_Set_RS(uint8_t data) {
-	// Sets the RS control line to either high or low:
-	GPIOA->BSRR = data ? 0x1 << 9 : 0x1 << 25;
-}
-void LCD_Set_RW(uint8_t data) {
-	// Sets the RW control line to either high or low:
-	GPIOF->BSRR = data ? 0x1 << 1 : 0x1 << 17;
-}
-void LCD_Set_E(uint8_t data) {
-	// Sets the RW control line to either high or low:
-	GPIOA->BSRR = data ? 0x1 << 10 : 0x1 << 26;
-}
+
+
 uint8_t LCR_LCD_IsBusy () {
   // For now, I'll just use the delay version of this.  Wait for a ms:
   LCR_MicroDelay(1000);
   return 0;
 }
+
 void LCR_LCD_Write (enum eLCD_OP op, uint8_t data) {
   // Writes a byte to the LCD.  This assumes four-bit mode.
   if (op == WRITE_DATA) LCD_Set_RS(1);
@@ -67,6 +79,7 @@ void LCR_LCD_Write (enum eLCD_OP op, uint8_t data) {
   LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(1);
   LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(0);
 }
+
 void LCR_LCD_Init (void) {
   // The LCD uses GPIOs A, B and F, so these clocks are required:
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOFEN;
@@ -105,7 +118,7 @@ void LCR_LCD_Init (void) {
 
   LCR_MicroDelay(15000);
   LCD_Set_RS(0); // Set LCD_RS low
-  LCD_Set_RW(0); // Set LCD_RW low
+//  LCD_Set_RW(0); // Set LCD_RW low
   LCD_Set_Data(3);  // Set the LCD_D4-D7 to 0b0011
   LCR_MicroDelay(5000); LCD_Set_E(1); // Set LCD_E high
   LCR_MicroDelay(5000); LCD_Set_E(0); // Set LCD_E low
@@ -137,10 +150,12 @@ void LCR_LCD_Init (void) {
   while (LCR_LCD_IsBusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x06);
 }
+
 void LCR_LCD_Clear (void) {
   while (LCR_LCD_IsBusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x01);
 }
+
 void LCR_LCD_GoToXY (int x, int y) {
   while (LCR_LCD_IsBusy());
   if( y == 0 ) {
@@ -150,11 +165,13 @@ void LCR_LCD_GoToXY (int x, int y) {
     LCR_LCD_Write(WRITE_INSTRUCTION, 0xC0 | (x & 0x3F));
   }
 }
+
 void LCR_LCD_WriteChar (char ch) {
   // Write a character to the data register on the LCD:
   while (LCR_LCD_IsBusy());
   LCR_LCD_Write(WRITE_DATA, ch);
 }
+
 void LCR_LCD_WriteString (char *s, int maxLength) {
   while(*s && maxLength-- > 0) {
 	// LCR_MicroDelay(10000); // This works, but
@@ -162,6 +179,7 @@ void LCR_LCD_WriteString (char *s, int maxLength) {
     LCR_LCD_Write(WRITE_DATA, *s++);
   }
 }
+
 void LCR_LCD_DefineChar (int ch, char *data) {
 	// Defines the character (ch can be 0 - 7 inclusive) to have the
 	// pattern defined in the first eight entries in the data array.
