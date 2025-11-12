@@ -1,5 +1,4 @@
 #include "tinkertech.h"
-#include "DAJP_F303K8_Driver.h"
 
 void setup() {
 	LCR_LCD_Init();

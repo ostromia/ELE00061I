@@ -1,0 +1,19 @@
+#ifndef __LCD_H
+#define __LCD_H
+
+extern void LCR_MicroDelay (uint32_t delay);
+
+void LCD_Set_Data(uint8_t data);
+void LCD_Set_RS(uint8_t data);
+void LCD_Set_RW(uint8_t data);
+void LCD_Set_E(uint8_t data);
+void LCD_Update(void);
+
+extern void LCR_LCD_Init(void);
+extern void LCR_LCD_Clear (void);
+extern void LCR_LCD_GoToXY (int x, int y);
+extern void LCR_LCD_WriteChar (char ch);
+extern void LCR_LCD_WriteString (char *ch, int maxLength);
+extern void LCR_LCD_DefineChar (int ch, char *data);
+
+#endif
