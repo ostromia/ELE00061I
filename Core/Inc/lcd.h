@@ -5,6 +5,7 @@
 
 void lcd_init(GPIO RS, GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7);
 void lcd_set_cursor(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7, int x, int y);
+void lcd_clear(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7);
 
 extern void LCR_MicroDelay (uint32_t delay);
 

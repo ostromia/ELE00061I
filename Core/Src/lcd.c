@@ -98,11 +98,6 @@ void LCR_LCD_Write (enum eLCD_OP op, uint8_t data) {
   LCD_Set_E(0);
 }
 
-void LCR_LCD_Clear (void) {
-	  while(isbusy());
-  LCR_LCD_Write(WRITE_INSTRUCTION, 0x01);
-}
-
 void LCR_LCD_GoToXY (int x, int y) {
 	  while(isbusy());
   if( y == 0 ) {
@@ -136,6 +131,15 @@ void LCR_LCD_DefineChar (int ch, char *data) {
 		LCR_LCD_Write(WRITE_DATA, data[u]);
 	}
 	LCR_LCD_Write(WRITE_INSTRUCTION, 0x80);
+}
+
+
+
+
+
+void lcd_clear(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7) {
+	while(isbusy());
+	write_lcd_byte(E, D4, D5, D6, D7, WRITE_INSTRUCTION, 0x01);
 }
 
 void lcd_set_cursor(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7, int x, int y) {
