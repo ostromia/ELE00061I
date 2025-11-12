@@ -1,13 +1,7 @@
-#include <main.h>
-#include <lcd.h>
-#include <stdbool.h>
+#include "tinkertech.h"
 
 #define LCD_DELAY_CONST 500
 
-typedef struct {
-    GPIO_TypeDef* port;
-    uint16_t pin;
-} GPIO;
 
 GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
 GPIO E  = { LCD_E_GPIO_Port,  LCD_E_Pin  };
