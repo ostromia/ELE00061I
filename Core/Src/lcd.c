@@ -31,38 +31,18 @@ void LCD_Set_Data(uint8_t data) {
     D7.port->BSRR = (data & 0x8) ? D7.pin : D7.pin << 16;
 }
 
+void delay(uint32_t delayInMicroSeconds) {
+	float compensation = (float)SystemCoreClock / (float)16e6;
+	volatile unsigned long x = (unsigned long)(compensation * (36 * delayInMicroSeconds >> 4));
+	while (x-- > 0);
+}
 
-// LCR_MicroDelay attempts to delay by the requested number of microseconds
-// The factors were determined experimentally for the Nucleo-G071RB board
-// running at 64 MHz with no compiler optimisations.
+int isbusy() {
+	delay(1000);
+	return 0;
+}
 
 enum eLCD_OP { READ_INSTRUCTION, WRITE_INSTRUCTION, READ_DATA, WRITE_DATA };
-
-uint8_t LCD_shift = 0;
-
-void LCR_MicroDelay (uint32_t delayInMicroSeconds) {
-  float compensation = (float)SystemCoreClock / (float)16e6;
-  volatile unsigned long x = (unsigned long)(compensation * (36 * delayInMicroSeconds >> 4));
-  while (x-- > 0);
-}
-
-///////////////////////////////////////////////////////////////////////////////
-// LCD driver functions start here:
-// I'll slow all the accesses down a bit, since I don't think the LCD
-// controller will be able to keep up with the ARM-Cortex.  Experimentally,
-// a delay of around XX us seems to be enough, and it makes writing to the
-// LCD so fast that you can't see the individual characters appear.  It's
-// also less likely to be interrupted by a reset in the middle of an operation,
-// and this can upset it (I'm still not entirely clear why this happens, or
-// how to kick it out of whatever random state it gets into at these times).
-
-
-
-uint8_t LCR_LCD_IsBusy () {
-  // For now, I'll just use the delay version of this.  Wait for a ms:
-  LCR_MicroDelay(1000);
-  return 0;
-}
 
 void LCR_LCD_Write (enum eLCD_OP op, uint8_t data) {
   // Writes a byte to the LCD.  This assumes four-bit mode.
@@ -73,11 +53,15 @@ void LCR_LCD_Write (enum eLCD_OP op, uint8_t data) {
   unsigned int toWrite_High = (data >> 4) & 0x0f;
   unsigned int toWrite_Low = data & 0x0f;
   LCD_Set_Data(toWrite_High);
-  LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(1);
-  LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(0);
+  delay(LCD_DELAY_CONST);
+  LCD_Set_E(1);
+  delay(LCD_DELAY_CONST);
+  LCD_Set_E(0);
   LCD_Set_Data(toWrite_Low);
-  LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(1);
-  LCR_MicroDelay(LCD_DELAY_CONST); LCD_Set_E(0);
+  delay(LCD_DELAY_CONST);
+  LCD_Set_E(1);
+  delay(LCD_DELAY_CONST);
+  LCD_Set_E(0);
 }
 
 void LCR_LCD_Init (void) {
@@ -116,48 +100,56 @@ void LCR_LCD_Init (void) {
   // instruction set has to be chosen first (see datasheet).
   // So these operations have to go slowly:
 
-  LCR_MicroDelay(15000);
+  delay(15000);
   LCD_Set_RS(0); // Set LCD_RS low
 //  LCD_Set_RW(0); // Set LCD_RW low
   LCD_Set_Data(3);  // Set the LCD_D4-D7 to 0b0011
-  LCR_MicroDelay(5000); LCD_Set_E(1); // Set LCD_E high
-  LCR_MicroDelay(5000); LCD_Set_E(0); // Set LCD_E low
-  LCR_MicroDelay(5000); LCD_Set_E(1); // Set LCD_E high
-  LCR_MicroDelay(5000); LCD_Set_E(0); // Set LCD_E low
-  LCR_MicroDelay(5000); LCD_Set_E(1); // Set LCD_E high
-  LCR_MicroDelay(5000); LCD_Set_E(0); // Set LCD_E low
+  delay(5000);
+  LCD_Set_E(1); // Set LCD_E high
+  delay(5000);
+  LCD_Set_E(0); // Set LCD_E low
+  delay(5000);
+  LCD_Set_E(1); // Set LCD_E high
+  delay(5000);
+  LCD_Set_E(0); // Set LCD_E low
+  delay(5000);
+  LCD_Set_E(1); // Set LCD_E high
+  delay(5000);
+  LCD_Set_E(0); // Set LCD_E low
 
   // Now LCD should be in eight-bit mode no matter where it started
   // from, so we can set the LCD to four-bit mode unambiguously with
   // one write cycle:
   LCD_Set_Data(2);  // Set the LCD_D4-D7 to 0b0010
-  LCR_MicroDelay(5000); LCD_Set_E(1); // Set LCD_E high
-  LCR_MicroDelay(5000); LCD_Set_E(0); // Set LCD_E low
+  delay(5000);
+  LCD_Set_E(1); // Set LCD_E high
+  delay(5000);
+  LCD_Set_E(0); // Set LCD_E low
 
   // Now can set the other control bits: two-line and 5*8 pixels
-  while (LCR_LCD_IsBusy());
+  while(isbusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x28);
 
   // Display ON/OFF Control: ON, no cursor
-  while (LCR_LCD_IsBusy());
+  while(isbusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x0c);
 
   // Clear the display
-  while (LCR_LCD_IsBusy());
+  while(isbusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x01);
 
   // Entry Mode Set: increment address (move right)
-  while (LCR_LCD_IsBusy());
+  while(isbusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x06);
 }
 
 void LCR_LCD_Clear (void) {
-  while (LCR_LCD_IsBusy());
+	  while(isbusy());
   LCR_LCD_Write(WRITE_INSTRUCTION, 0x01);
 }
 
 void LCR_LCD_GoToXY (int x, int y) {
-  while (LCR_LCD_IsBusy());
+	  while(isbusy());
   if( y == 0 ) {
     LCR_LCD_Write(WRITE_INSTRUCTION, 0x80 | (x & 0x3F));
   }
@@ -168,14 +160,13 @@ void LCR_LCD_GoToXY (int x, int y) {
 
 void LCR_LCD_WriteChar (char ch) {
   // Write a character to the data register on the LCD:
-  while (LCR_LCD_IsBusy());
+	  while(isbusy());
   LCR_LCD_Write(WRITE_DATA, ch);
 }
 
 void LCR_LCD_WriteString (char *s, int maxLength) {
   while(*s && maxLength-- > 0) {
-	// LCR_MicroDelay(10000); // This works, but
-    while (LCR_LCD_IsBusy()){} // This does not
+	  while(isbusy());
     LCR_LCD_Write(WRITE_DATA, *s++);
   }
 }
