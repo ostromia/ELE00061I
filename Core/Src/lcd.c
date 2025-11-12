@@ -164,12 +164,13 @@ void LCR_LCD_WriteChar (char ch) {
   LCR_LCD_Write(WRITE_DATA, ch);
 }
 
-void LCR_LCD_WriteString (char *s, int maxLength) {
-  while(*s && maxLength-- > 0) {
-	  while(isbusy());
-    LCR_LCD_Write(WRITE_DATA, *s++);
-  }
+void LCR_LCD_WriteString(char *s) {
+    while (*s) {
+        while (isbusy());
+        LCR_LCD_Write(WRITE_DATA, *s++);
+    }
 }
+
 
 void LCR_LCD_DefineChar (int ch, char *data) {
 	// Defines the character (ch can be 0 - 7 inclusive) to have the

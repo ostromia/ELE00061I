@@ -13,7 +13,7 @@ extern void LCR_LCD_Init(void);
 extern void LCR_LCD_Clear (void);
 extern void LCR_LCD_GoToXY (int x, int y);
 extern void LCR_LCD_WriteChar (char ch);
-extern void LCR_LCD_WriteString (char *ch, int maxLength);
+extern void LCR_LCD_WriteString (char *ch);
 extern void LCR_LCD_DefineChar (int ch, char *data);
 
 #endif
