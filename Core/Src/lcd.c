@@ -136,6 +136,12 @@ void LCR_LCD_DefineChar (int ch, char *data) {
 
 
 
+void lcd_write_string(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7, char *string) {
+    while (*string) {
+        while (isbusy());
+        write_lcd_byte(E, D4, D5, D6, D7, WRITE_DATA, *string++);
+    }
+}
 
 void lcd_clear(GPIO E, GPIO D4, GPIO D5, GPIO D6, GPIO D7) {
 	while(isbusy());

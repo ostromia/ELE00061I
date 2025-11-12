@@ -12,7 +12,7 @@ void setup() {
 
 	lcd_init(RS, E, D4, D5, D6, D7);
 	lcd_set_cursor(E, D4, D5, D6, D7, 0, 0);
-	LCR_LCD_WriteString("Hello, World!");
+	lcd_write_string(E, D4, D5, D6, D7, "Hello Borld!");
 }
 
 void loop() {
