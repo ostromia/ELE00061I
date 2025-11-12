@@ -256,14 +256,14 @@ unsigned int LCR_Switch_GetState (unsigned int which) {
 void LCD_Set_Data(uint8_t data) {
 	// This takes the lowest four bits in data and puts them on the
 	// relevant pins of the LCD (LCD_D4 to LCD_D7) in four-bit mode.
-	GPIOB->BSRR = (data & 0x1) ? 0x1 << 1 : 0x1 << 17;
-	GPIOB->BSRR = (data & 0x2) ? 0x1 << 6 : 0x1 << 22;
+	GPIOA->BSRR = (data & 0x1) ? 0x1 << 12 : 0x1 << 28;
+	GPIOB->BSRR = (data & 0x2) ? 0x1 << 0 : 0x1 << 16;
 	GPIOB->BSRR = (data & 0x4) ? 0x1 << 7 : 0x1 << 23;
-	GPIOB->BSRR = (data & 0x8) ? 0x1 << 0 : 0x1 << 16;
+	GPIOB->BSRR = (data & 0x8) ? 0x1 << 6 : 0x1 << 22;
 }
 void LCD_Set_RS(uint8_t data) {
 	// Sets the RS control line to either high or low:
-	GPIOA->BSRR = data ? 0x1 << 8 : 0x1 << 24;
+	GPIOA->BSRR = data ? 0x1 << 9 : 0x1 << 25;
 }
 void LCD_Set_RW(uint8_t data) {
 	// Sets the RW control line to either high or low:
@@ -271,7 +271,7 @@ void LCD_Set_RW(uint8_t data) {
 }
 void LCD_Set_E(uint8_t data) {
 	// Sets the RW control line to either high or low:
-	GPIOF->BSRR = data ? 0x1 << 0 : 0x1 << 16;
+	GPIOA->BSRR = data ? 0x1 << 10 : 0x1 << 26;
 }
 uint8_t LCR_LCD_IsBusy () {
   // For now, I'll just use the delay version of this.  Wait for a ms:
@@ -298,7 +298,7 @@ void LCR_LCD_Init (void) {
   RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOBEN | RCC_AHBENR_GPIOFEN;
 
   // Relevant control GPIO pins are PA8 (RS), PF1 (RW), PF0 (E)
-  LCR_Set_As_Output(8, GPIOA);
+  /*LCR_Set_As_Output(8, GPIOA);
   LCR_Set_As_Output(1, GPIOF);
   LCR_Set_As_Output(0, GPIOF);
 
@@ -307,6 +307,7 @@ void LCR_LCD_Init (void) {
   LCR_Set_As_Output(1, GPIOB);
   LCR_Set_As_Output(6, GPIOB);
   LCR_Set_As_Output(7, GPIOB);
+  */
 
   // The three writes in the following block are a workaround for
   // an interesting problem.  If this is a power on, then the LCD
