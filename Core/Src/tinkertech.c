@@ -1,5 +1,33 @@
 #include "tinkertech.h"
 
+void table() {
+	/* USER CODE BEGIN PV */
+	/* 32 smaples
+	const uint16_t sine_table[32] = {
+			2048,2368,2675,2958,3206,3410,3561,3655,
+			3686,3655,3561,3410,3206,2958,2675,2368,
+			2048,1728,1421,1138,890,686,535,441,
+			410,441,535,686,890,1138,1421,1728
+	};
+	32 samples */
+
+
+	/* Sinewave array */
+	const uint16_t sine_table[64] = {
+			2048,2209,2368,2523,2675,2820,2958,3087,3206,3314,3410,3493,3561,3615,3655,3678,
+			3686,3678,3655,3615,3561,3493,3410,3314,3206,3087,2958,2820,2675,2523,2368,2209,
+			2048,1887,1728,1573,1421,1276,1138,1009,890,782,686,603,535,481,441,418,
+			410,418,441,481,535,603,686,782,890,1009,1138,1276,1421,1573,1728,1887
+	};
+
+	// volatile is for preventing random omitting from compiler
+	volatile uint16_t adc1_buffer[64];	// array of baseline reading
+
+	volatile uint16_t adc2_buffer[64];	// array of DUT reading
+
+	/* USER CODE END PV */
+}
+
 void setup() {
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
 	GPIO E  = { LCD_E_GPIO_Port,  LCD_E_Pin  };
