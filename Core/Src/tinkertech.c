@@ -1,6 +1,18 @@
 #include "tinkertech.h"
 
-void table() {
+
+extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
+extern DMA_HandleTypeDef hdma_adc2;
+
+extern DAC_HandleTypeDef hdac1;
+extern DMA_HandleTypeDef hdma_dac1_ch1;
+
+extern TIM_HandleTypeDef htim6;
+
+extern UART_HandleTypeDef huart2;
+
+const double t = M_PI / 12.0; // tolerance of PI/6
 	/* USER CODE BEGIN PV */
 	/* 32 smaples
 	const uint16_t sine_table[32] = {
@@ -25,8 +37,9 @@ void table() {
 
 	volatile uint16_t adc2_buffer[64];	// array of DUT reading
 
+	char msg[100]; // message to console
 	/* USER CODE END PV */
-}
+
 
 void setup() {
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
@@ -44,13 +57,6 @@ void setup() {
 
 
 
-	  /* Initialize all configured peripherals */
-	  MX_GPIO_Init();
-	  MX_DMA_Init();
-	  MX_DAC1_Init();
-	  MX_TIM6_Init();
-	  MX_ADC1_Init();
-	  MX_ADC2_Init();
 	  /* USER CODE BEGIN 2 */
 	  HAL_TIM_Base_Start(&htim6); // starts timer
 
@@ -72,7 +78,7 @@ void setup() {
 	  /* Infinite loop */
 	  /* USER CODE BEGIN WHILE */
 	  /* USER CODE BEGIN 3 */
-	  const double t = M_PI / 12.0; // tolerance of PI/6
+
 }
 
 void loop() {
@@ -140,7 +146,7 @@ void loop() {
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: No Component | Phase: %.2f\r\n%.2f\r\n", phase_diff);
+				sprintf(msg, "Type: No Component | Phase: %.2f\r\n", phase_diff);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
@@ -148,5 +154,7 @@ void loop() {
 			HAL_Delay(500);
 
 
+
+	  }
 
 }
