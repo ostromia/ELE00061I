@@ -119,29 +119,31 @@ void loop() {
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
 				phase_diff < (M_PI_2 + t))
 			{
-			   //printf("This is an Inductor (L)\r\n");
+
+				sprintf(msg, "Type: Inductor (L) | Phase:%.2f\r\n", phase_diff);
 			}
 
 			// Capacitor
 			else if (phase_diff > (-M_PI_2 - t) && // P.D. is around -PI/2
 					 phase_diff < (-M_PI_2 + t))
 			{
-			  //printf("This is a Capacitor (C)\r\n");
+				sprintf(msg, "Type: Capacitor (C) | Phase:%.2f\r\n", phase_diff);
 			}
 
 			// Resistor
-			else if (phase_diff > (M_PI - t) || // PI - t
-					 phase_diff < (-M_PI + t))   // - PI + t
+			else if (phase_diff > (M_PI - t) || //p.d.is around 0
+					 phase_diff < (-M_PI + t))
 			{
-			  //printf("This is a Resistor (R)\r\n");
+				sprintf(msg, "Type: Resistor (R) | Phase:%.2f\r\n", phase_diff);
 			}
 
 			// Exception
 			else
 			{
-			  //printf("No Component\r\n");
+				sprintf(msg, "Type: No Component | Phase: %.2f\r\n%.2f\r\n", phase_diff);
 			}
 
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
 			// print every 500ms
 			HAL_Delay(500);
 
