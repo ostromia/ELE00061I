@@ -113,6 +113,16 @@ void loop() {
 		    // final phase diff
 		    double phase_diff = phase_Vout - phase_Vbase;
 
+		    // Magnitude of Vout
+		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
+
+		    if (mag_Vout < 150.0) {
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.1f\r\n", mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+			return; // return without phase difference calculation
+		        }
+
 		    // keeping phase diff in range (-PI - +PI)
 			if (phase_diff > M_PI) {
 			  phase_diff -= (2 * M_PI);
@@ -146,7 +156,7 @@ void loop() {
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: No Component | Phase: %.2f\r\n", phase_diff);
+				sprintf(msg, "Type: Other Component | Phase: %.2f\r\n", phase_diff);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
