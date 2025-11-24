@@ -117,7 +117,7 @@ void loop() {
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
 
 		    if (mag_Vout < 150.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.1f\r\n", mag_Vout);
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			return; // return without phase difference calculation
@@ -136,27 +136,27 @@ void loop() {
 				phase_diff < (M_PI_2 + t))
 			{
 
-				sprintf(msg, "Type: Inductor (L) | Phase:%.2f\r\n", phase_diff);
+				sprintf(msg, "Type: Inductor (L) | Phase:%.2f | Magnitude:%.2f\r\n", phase_diff,mag_Vout);
 			}
 
 			// Capacitor
 			else if (phase_diff > (-M_PI_2 - t) && // P.D. is around -PI/2
 					 phase_diff < (-M_PI_2 + t))
 			{
-				sprintf(msg, "Type: Capacitor (C) | Phase:%.2f\r\n", phase_diff);
+				sprintf(msg, "Type: Capacitor (C) | Phase:%.2f | Magnitude:%.2f\r\n", phase_diff,mag_Vout);
 			}
 
 			// Resistor
 			else if (phase_diff > (M_PI - t) || //p.d.is around 0
 					 phase_diff < (-M_PI + t))
 			{
-				sprintf(msg, "Type: Resistor (R) | Phase:%.2f\r\n", phase_diff);
+				sprintf(msg, "Type: Resistor (R) | Phase:%.2f | Magnitude:%.2f\r\n", phase_diff,mag_Vout);
 			}
 
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: Other Component | Phase: %.2f\r\n", phase_diff);
+				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n", phase_diff,mag_Vout);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
