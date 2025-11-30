@@ -117,16 +117,21 @@ void loop() {
 		    // final phase diff
 		    double phase_diff = phase_Vout - phase_Vbase;
 
-		    // double gain = vout_a0 / vbase_a0
+		 // double gain = vout_a0 / vbase_a0
+
 		    // Magnitude (amplitude) of Vout peak to peak
 		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
 
-		    double rRef;	// TBD
+		    // Reference resistors
+		    double rRef_high = 4700.0;	// when switch is OFF
+		    double rRef_low = 107.0;	// when switch is ON
+
 		    double impedence = rRef * mag_Vbase / mag_Vout;	// Impedence calculation
 
 		    double freq = 10000.0;
 
+		    //calculating each RLC value for DUT
 		    double R = impedence;
 		    double L = impedence/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedence);
