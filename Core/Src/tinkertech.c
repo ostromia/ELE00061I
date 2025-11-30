@@ -1,18 +1,19 @@
 #include "tinkertech.h"
 
 
-extern ADC_HandleTypeDef hadc1;
-extern ADC_HandleTypeDef hadc2;
-extern DMA_HandleTypeDef hdma_adc2;
+	// borrowing handles from main.c
+	extern ADC_HandleTypeDef hadc1;
+	extern ADC_HandleTypeDef hadc2;
+	extern DMA_HandleTypeDef hdma_adc2;
 
-extern DAC_HandleTypeDef hdac1;
-extern DMA_HandleTypeDef hdma_dac1_ch1;
+	extern DAC_HandleTypeDef hdac1;
+	extern DMA_HandleTypeDef hdma_dac1_ch1;
 
-extern TIM_HandleTypeDef htim6;
+	extern TIM_HandleTypeDef htim6;
 
-extern UART_HandleTypeDef huart2;
+	extern UART_HandleTypeDef huart2;
 
-const double t = M_PI / 12.0; // tolerance of PI/6
+	const double t = M_PI / 12.0; // tolerance of PI/6
 	/* USER CODE BEGIN PV */
 	/* 32 smaples
 	const uint16_t sine_table[32] = {
@@ -60,8 +61,6 @@ void setup() {
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
 
-
-	  /* USER CODE BEGIN 2 */
 	  HAL_TIM_Base_Start(&htim6); // starts timer
 
 	  HAL_DAC_Start_DMA(&hdac1, // dac handle
@@ -77,11 +76,6 @@ void setup() {
 	  HAL_ADC_Start_DMA(&hadc2,	// adc2 handle
 			  	  	   (uint32_t*)adc2_buffer,
 					   64);
-	  /* USER CODE END 2 */
-
-	  /* Infinite loop */
-	  /* USER CODE BEGIN WHILE */
-	  /* USER CODE BEGIN 3 */
 
 }
 
@@ -124,8 +118,10 @@ void loop() {
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
 
 		    // Reference resistors
-		    double rRef_high = 4700.0;	// when switch is OFF
-		    double rRef_low = 107.0;	// when switch is ON
+		    const double rRef_high = 4700.0;	// when switch is OFF
+		    const double rRef_low = 107.0;	// when switch is ON
+
+		    double rRef = rRef_high;
 
 		    double impedence = rRef * mag_Vbase / mag_Vout;	// Impedence calculation
 
