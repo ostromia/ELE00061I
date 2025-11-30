@@ -81,8 +81,8 @@ void setup() {
 
 void loop() {
 	 while (1)
-	  {// taking 4 samples per period
-		// subtract 2048 to omit the dc property
+	  {		// taking 4 samples per period
+		 	// subtract 2048 to omit the dc property
 
 		    // Vbase = adc1
 		    double vbase_a0 = (double)adc1_buffer[0] - 2048.0;
@@ -111,7 +111,7 @@ void loop() {
 		    // final phase diff
 		    double phase_diff = phase_Vout - phase_Vbase;
 
-		 // double gain = vout_a0 / vbase_a0
+		    // double gain = vout_a0 / vbase_a0
 
 		    // Magnitude (amplitude) of Vout peak to peak
 		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
@@ -125,6 +125,7 @@ void loop() {
 
 		    double impedence = rRef * mag_Vbase / mag_Vout;	// Impedence calculation
 
+		    // freq through DUT
 		    double freq = 10000.0;
 
 		    //calculating each RLC value for DUT
