@@ -79,6 +79,9 @@ void setup() {
 
 }
 
+int mode = 0;	// 0 = 4.7kOhm
+				// 1 = 107Ohm
+
 void loop() {
 	 while (1)
 	  {		// taking 4 samples per period
@@ -121,7 +124,16 @@ void loop() {
 		    const double rRef_high = 4700.0;	// when switch is OFF
 		    const double rRef_low = 107.0;	// when switch is ON
 
-		    double rRef = rRef_high;
+		    double rRef;
+
+		    if (mode == 1) {
+		    	rRef = 107.0;
+		    }
+		    else
+		    {
+		    	rRef = 4700.0;
+		    }
+
 
 		    double impedence = rRef * mag_Vbase / mag_Vout;	// Impedence calculation
 
