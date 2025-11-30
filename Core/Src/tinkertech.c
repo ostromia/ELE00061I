@@ -136,7 +136,7 @@ void loop() {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			return; // return without phase difference calculation
+			continue; // continue without phase difference calculation
 		        }
 
 		    // keeping phase diff in range (-PI - +PI)
