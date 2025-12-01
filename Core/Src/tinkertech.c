@@ -1,54 +1,49 @@
 #include "tinkertech.h"
 
 
-	// borrowing handles from main.c
-	extern ADC_HandleTypeDef hadc1;
-	extern ADC_HandleTypeDef hadc2;
-	extern DMA_HandleTypeDef hdma_adc2;
+// borrowing handles from main.c
+extern ADC_HandleTypeDef hadc1;
+extern ADC_HandleTypeDef hadc2;
+extern DMA_HandleTypeDef hdma_adc2;
 
-	extern DAC_HandleTypeDef hdac1;
-	extern DMA_HandleTypeDef hdma_dac1_ch1;
+extern DAC_HandleTypeDef hdac1;
+extern DMA_HandleTypeDef hdma_dac1_ch1;
 
-	extern TIM_HandleTypeDef htim6;
+extern TIM_HandleTypeDef htim6;
 
-	extern UART_HandleTypeDef huart2;
+extern UART_HandleTypeDef huart2;
 
-	const double t = M_PI / 12.0; // tolerance of PI/6
+// tolerance of PI/6
+const double t = M_PI / 12.0;
 
-	const double range_limit = 1800.0;
-	/* 32 smaples
-	const uint16_t sine_table[32] = {
-			2048,2368,2675,2958,3206,3410,3561,3655,
-			3686,3655,3561,3410,3206,2958,2675,2368,
-			2048,1728,1421,1138,890,686,535,441,
-			410,441,535,686,890,1138,1421,1728
-	};
-	32 samples */
+const double range_limit = 1800.0;
 
+/* sinewave array */
+const uint16_t sine_table[64] = {
+        2048,2128,2208,2286,2361,2434,2503,2568,
+        2627,2681,2729,2770,2805,2832,2851,2863,
+        2867,2863,2851,2832,2805,2770,2729,2681,
+        2627,2568,2503,2434,2361,2286,2208,2128,
+        2048,1968,1888,1810,1735,1662,1593,1528,
+        1469,1415,1367,1326,1291,1264,1245,1233,
+        1229,1233,1245,1264,1291,1326,1367,1415,
+        1469,1528,1593,1662,1735,1810,1888,1968
+};
 
-	/* Sinewave array */
-	const uint16_t sine_table[64] = {
-			2048,2128,2208,2286,2361,2434,2503,2568,
-			2627,2681,2729,2770,2805,2832,2851,2863,
-			2867,2863,2851,2832,2805,2770,2729,2681,
-			2627,2568,2503,2434,2361,2286,2208,2128,
-			2048,1968,1888,1810,1735,1662,1593,1528,
-			1469,1415,1367,1326,1291,1264,1245,1233,
-			1229,1233,1245,1264,1291,1326,1367,1415,
-			1469,1528,1593,1662,1735,1810,1888,1968
-	};
+// volatile is for preventing random omitting from compiler
 
-	// volatile is for preventing random omitting from compiler
-	volatile uint16_t adc1_buffer[64];	// array of baseline reading
+// array of baseline reading
+volatile uint16_t adc1_buffer[64];
 
-	volatile uint16_t adc2_buffer[64];	// array of DUT reading
+// array of DUT reading
+volatile uint16_t adc2_buffer[64];
 
-	char msg[100]; // message to console
-	/* USER CODE END PV */
+// message to console
+char msg[100];
 
-	// Which pin are we using for switch?
-	#define SWITCH_PORT GPIOB
-	#define SWITCH_PIN GPIO_PIN_0
+// Which pin are we using for switch?
+#define SWITCH_PORT GPIOB
+#define SWITCH_PIN GPIO_PIN_0
 
 void setup() {
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
