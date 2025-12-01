@@ -91,10 +91,12 @@ void loop() {
 	 	 // static: variable keeps its value after function call
 		static int mode = 0;	// 0 = 4.7kOhm
 								// 1 = 107Ohm
+
+		static double checker = 0.0; // (Temporary check whether static work as intended or not)
 	 while (1)
 	  {		// For better reading, dc_offset is produced which replacing 2048
 		 	double dc_offset = (adc1_buffer[0] + adc1_buffer[16] + adc1_buffer[32] + adc1_buffer[48]) / 4.0;
-
+		 	double checker = checker + 1.0;
 		 	// taking 4 samples per period
 		 	// subtract dc_offset to omit the dc property
 
@@ -141,13 +143,13 @@ void loop() {
 		    	// turn OFF the switch
 		    	HAL_GPIO_WritePin(SWITCH_PORT,SWITCH_PIN, GPIO_PIN_RESET);
 		    	// and therefore Reference resistance = 4k7
-		    	rRef = 4700.0;
+		    	rRef = rRef_high;
 		    } else {
 		    	// if mode is ON
 		    	// turn ON the switch
 		    	HAL_GPIO_WritePin(SWITCH_PORT,SWITCH_PIN, GPIO_PIN_SET);
 		    	// so Ref is 107
-		    	rRef = 107.0;
+		    	rRef = rRef_low;
 		    }
 
 		    // Auto ranging
@@ -165,7 +167,7 @@ void loop() {
 
 
 		    if (mag_Vout < 10.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%f\r\n", mag_Vout, checker);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue; // continue without phase difference calculation
@@ -215,7 +217,7 @@ void loop() {
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n", phase_diff, mag_Vout);
+				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n ", phase_diff, mag_Vout);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
