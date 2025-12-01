@@ -45,6 +45,9 @@
 	char msg[100]; // message to console
 	/* USER CODE END PV */
 
+	// Which pin are we using for switch?
+	#define SWITCH_PORT GPIOB
+	#define SWITCH_PIN GPIO_PIN_0
 
 void setup() {
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
@@ -79,10 +82,12 @@ void setup() {
 
 }
 
-int mode = 0;	// 0 = 4.7kOhm
-				// 1 = 107Ohm
+
 
 void loop() {
+	// static: variable keeps its value after function call
+	static int mode = 0;	// 0 = 4.7kOhm
+							// 1 = 107Ohm
 	 while (1)
 	  {		// taking 4 samples per period
 		 	// subtract 2048 to omit the dc property
@@ -124,26 +129,33 @@ void loop() {
 		    const double rRef_high = 4700.0;	// when switch is OFF
 		    const double rRef_low = 107.0;	// when switch is ON
 
+		    // rRef is not determined yet
 		    double rRef;
 
-		    if (mode == 1) {
+		    if (mode == 0) {
+		    	// if mode is OFF
+		    	// turn OFF the switch
+		    	HAL_GPIO_WritePin(SWITCH_PORT,SWITCH_PIN, GPIO_PIN_RESET);
+		    	// and therefore Reference resistance = 4k7
+		    	rRef = 4700.0;
+		    } else {
+		    	// if mode is ON
+		    	// turn ON the switch
+		    	HAL_GPIO_WritePin(SWITCH_PORT,SWITCH_PIN, GPIO_PIN_SET);
+		    	// so Ref is 107
 		    	rRef = 107.0;
 		    }
-		    else
-		    {
-		    	rRef = 4700.0;
-		    }
 
 
-		    double impedence = rRef * mag_Vbase / mag_Vout;	// Impedence calculation
+		    double impedance = rRef * mag_Vbase / mag_Vout;	// Impedance calculation
 
 		    // freq through DUT
 		    double freq = 10000.0;
 
 		    //calculating each RLC value for DUT
-		    double R = impedence;
-		    double L = impedence/(2.0 * M_PI * freq);
-		    double C = 1.0/(2.0 * M_PI * freq * impedence);
+		    double R = impedance;
+		    double L = impedance/(2.0 * M_PI * freq);
+		    double C = 1.0/(2.0 * M_PI * freq * impedance);
 
 		    if (mag_Vout < 0.001000) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
