@@ -14,7 +14,8 @@
 	extern UART_HandleTypeDef huart2;
 
 	const double t = M_PI / 12.0; // tolerance of PI/6
-	/* USER CODE BEGIN PV */
+
+	const double range_limit = 1800.0;
 	/* 32 smaples
 	const uint16_t sine_table[32] = {
 			2048,2368,2675,2958,3206,3410,3561,3655,
@@ -64,6 +65,7 @@ void setup() {
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
 
+	// Start timer & DMA
 	  HAL_TIM_Base_Start(&htim6); // starts timer
 
 	  HAL_DAC_Start_DMA(&hdac1, // dac handle
@@ -80,16 +82,20 @@ void setup() {
 			  	  	   (uint32_t*)adc2_buffer,
 					   64);
 
+	  HAL_Delay(1000); // 1 sec delay for setup
 }
 
 
 
 void loop() {
-	// static: variable keeps its value after function call
-	static int mode = 0;	// 0 = 4.7kOhm
-							// 1 = 107Ohm
+	 	 // static: variable keeps its value after function call
+		static int mode = 0;	// 0 = 4.7kOhm
+								// 1 = 107Ohm
 	 while (1)
-	  {		// taking 4 samples per period
+	  {
+
+
+		 	// taking 4 samples per period
 		 	// subtract 2048 to omit the dc property
 
 		    // Vbase = adc1
@@ -119,8 +125,6 @@ void loop() {
 		    // final phase diff
 		    double phase_diff = phase_Vout - phase_Vbase;
 
-		    // double gain = vout_a0 / vbase_a0
-
 		    // Magnitude (amplitude) of Vout peak to peak
 		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
@@ -146,8 +150,28 @@ void loop() {
 		    	rRef = 107.0;
 		    }
 
+		    // Auto ranging
+		    if (mode == 0 && mag_Vout > range_limit) { // if signal is too strong
+		    	mode = 1;							// Turn ON the switch
+		    	HAL_Delay(100);
+		    	continue;
+		    }
 
-		    double impedance = rRef * mag_Vbase / mag_Vout;	// Impedance calculation
+		    if (mode == 1 && mag_Vout < 200.0) {	// if signal is too weak
+		    	mode = 0;							// Turn OFF the switch
+		    	HAL_Delay(100);
+		    	continue;
+		    }
+
+
+		    if (mag_Vout < 10.0) {
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+			continue; // continue without phase difference calculation
+		        }
+
+		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
 
 		    // freq through DUT
 		    double freq = 10000.0;
@@ -156,15 +180,7 @@ void loop() {
 		    double R = impedance;
 		    double L = impedance/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedance);
-
-		    if (mag_Vout < 0.001000) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-			continue; // continue without phase difference calculation
-		        }
-
-		    // keeping phase diff in range (-PI - +PI)
+		    // keeping phase difference in range (-PI - +PI)
 			if (phase_diff > M_PI) {
 			  phase_diff -= (2.0 * M_PI);
 			} else if (phase_diff < -M_PI) {
@@ -172,6 +188,7 @@ void loop() {
 			}
 
 
+			// Print measurement
 			// Inductor
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
 				phase_diff < (M_PI_2 + t))
