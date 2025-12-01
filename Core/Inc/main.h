@@ -69,6 +69,8 @@ void Error_Handler(void);
 #define ADC2_GPIO_Port GPIOA
 #define LCD_D5_Pin GPIO_PIN_0
 #define LCD_D5_GPIO_Port GPIOB
+#define Switch_Pin GPIO_PIN_8
+#define Switch_GPIO_Port GPIOA
 #define LCD_RS_Pin GPIO_PIN_9
 #define LCD_RS_GPIO_Port GPIOA
 #define LCD_E_Pin GPIO_PIN_10

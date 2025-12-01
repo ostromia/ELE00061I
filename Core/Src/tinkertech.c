@@ -39,16 +39,16 @@
 	};
 
 	// volatile is for preventing random omitting from compiler
-	volatile uint16_t adc1_buffer[64];	// array of baseline reading
+	volatile uint32_t adc1_buffer[128];	// array of baseline reading
 
-	volatile uint16_t adc2_buffer[64];	// array of DUT reading
+	volatile uint32_t adc2_buffer[128];	// array of DUT reading
 
 	char msg[100]; // message to console
 	/* USER CODE END PV */
 
 	// Which pin are we using for switch?
-	#define SWITCH_PORT GPIOB
-	#define SWITCH_PIN GPIO_PIN_0
+	#define SWITCH_PORT GPIOA
+	#define SWITCH_PIN Switch_Pin
 
 void setup() {
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
@@ -95,22 +95,23 @@ void loop() {
 		static double checker = 0.0; // (Temporary check whether static work as intended or not)
 	 while (1)
 	  {		// For better reading, dc_offset is produced which replacing 2048
-		 	double dc_offset = (adc1_buffer[0] + adc1_buffer[16] + adc1_buffer[32] + adc1_buffer[48]) / 4.0;
+		 	HAL_Delay(100);
+		 	double dc_offset = (adc1_buffer[0] + adc1_buffer[32] + adc1_buffer[64] + adc1_buffer[96]) / 4.0;
 		 	double checker = checker + 1.0;
 		 	// taking 4 samples per period
 		 	// subtract dc_offset to omit the dc property
 
 		    // Vbase = adc1
 		    double vbase_a0 = (double)adc1_buffer[0] - dc_offset;
-		    double vbase_a1 = (double)adc1_buffer[16] - dc_offset;
-		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset;
-		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset;
+		    double vbase_a1 = (double)adc1_buffer[32] - dc_offset;
+		    double vbase_a2 = (double)adc1_buffer[64] - dc_offset;
+		    double vbase_a3 = (double)adc1_buffer[96] - dc_offset;
 
 		    // Vout = adc2
 		    double vout_a0 = (double)adc2_buffer[0] - dc_offset;
-		    double vout_a1 = (double)adc2_buffer[16] - dc_offset;
-		    double vout_a2 = (double)adc2_buffer[32] - dc_offset;
-		    double vout_a3 = (double)adc2_buffer[48] - dc_offset;
+		    double vout_a1 = (double)adc2_buffer[32] - dc_offset;
+		    double vout_a2 = (double)adc2_buffer[64] - dc_offset;
+		    double vout_a3 = (double)adc2_buffer[96] - dc_offset;
 
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
@@ -138,6 +139,7 @@ void loop() {
 		    // rRef is not determined yet
 		    double rRef;
 
+		    HAL_Delay(100);
 		    if (mode == 0) {
 		    	// if mode is OFF
 		    	// turn OFF the switch
@@ -165,9 +167,10 @@ void loop() {
 		    	continue;
 		    }
 
+		    HAL_Delay(100);
 
 		    if (mag_Vout < 10.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%f\r\n", mag_Vout, checker);
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout, checker);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue; // continue without phase difference calculation
@@ -211,7 +214,7 @@ void loop() {
 					 phase_diff < (-M_PI + t))
 			{
 
-				sprintf(msg, "Type: Resistor (R) | Phase:%.2f | %.2fΩ\r\n", phase_diff, R);
+				sprintf(msg, "Type: Resistor (R) | Phase:%.2f | %.2fOhm\r\n", phase_diff, R);
 			}
 
 			// Exception
