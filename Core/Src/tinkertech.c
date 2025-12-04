@@ -62,7 +62,7 @@ void setup() {
 
 
 	// Start timer & DMA
-	  HAL_TIM_Base_Start(&htim6); // starts timer
+
 
 	  HAL_DAC_Start_DMA(&hdac1, // dac handle
 	                    DAC_CHANNEL_1, // dac channel
@@ -77,6 +77,8 @@ void setup() {
 	  HAL_ADC_Start_DMA(&hadc2,	// adc2 handle
 			  	  	   (uint32_t*)adc2_buffer,
 					   64);
+
+	  HAL_TIM_Base_Start(&htim6); // starts timer
 
 	  HAL_Delay(1000); // 1 sec delay for setup
 }
