@@ -193,9 +193,13 @@ void loop() {
 			  phase_diff += (2.0 * M_PI);
 			}
 
+			sprintf(msg, "DEBUG | Phase: %.4f | Mag: %.0f\r\n", phase_diff, mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
 
 			// Print measurement
 			// Inductor
+			/*
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
 				phase_diff < (M_PI_2 + t))
 			{
@@ -223,7 +227,7 @@ void loop() {
 			{
 				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n ", phase_diff, impedance);
 			}
-
+			*/
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
 			// print every 500ms
 			HAL_Delay(500);
