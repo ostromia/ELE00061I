@@ -195,6 +195,11 @@ void loop() {
 			  phase_diff += (2.0 * M_PI);
 			}
 
+			// check circuit functionality
+			sprintf(msg, "V_In: %.0f | V_Out: %.0f | Mode: %d\r\n", mag_Vbase, mag_Vout, mode);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+			continue;
 
 			// Print measurement
 			// Inductor
