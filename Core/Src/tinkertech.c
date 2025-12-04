@@ -133,7 +133,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef;
+		    double rRef = 107.0;
 
 		    HAL_Delay(100);
 		    /*
