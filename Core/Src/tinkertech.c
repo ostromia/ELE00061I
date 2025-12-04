@@ -101,15 +101,15 @@ void loop() {
 
 		    // Vbase = adc1
 		    double vbase_a0 = (double)adc1_buffer[0] - dc_offset;
-		    double vbase_a1 = (double)adc1_buffer[32] - dc_offset;
-		    double vbase_a2 = (double)adc1_buffer[64] - dc_offset;
-		    double vbase_a3 = (double)adc1_buffer[96] - dc_offset;
+		    double vbase_a1 = (double)adc1_buffer[16] - dc_offset;
+		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset;
+		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset;
 
 		    // Vout = adc2
 		    double vout_a0 = (double)adc2_buffer[0] - dc_offset;
-		    double vout_a1 = (double)adc2_buffer[32] - dc_offset;
-		    double vout_a2 = (double)adc2_buffer[64] - dc_offset;
-		    double vout_a3 = (double)adc2_buffer[96] - dc_offset;
+		    double vout_a1 = (double)adc2_buffer[16] - dc_offset;
+		    double vout_a2 = (double)adc2_buffer[32] - dc_offset;
+		    double vout_a3 = (double)adc2_buffer[48] - dc_offset;
 
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
@@ -224,7 +224,7 @@ void loop() {
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n ", phase_diff, impedance);
+				sprintf(msg, "Type: Other Component | Phase: %.2f | Impedance:%.2f\r\n ", phase_diff, impedance);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
