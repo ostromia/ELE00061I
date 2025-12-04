@@ -219,7 +219,7 @@ void loop() {
 			// Exception
 			else
 			{
-				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n ", phase_diff, mag_Vout);
+				sprintf(msg, "Type: Other Component | Phase: %.2f | Magnitude:%.2f\r\n ", phase_diff, impedance);
 			}
 
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
