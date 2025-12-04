@@ -14,7 +14,7 @@ extern TIM_HandleTypeDef htim6;
 extern UART_HandleTypeDef huart2;
 
 // tolerance of PI/6
-const double t = M_PI / 12.0;
+const double t = M_PI / 6.0;
 
 const double range_limit = 1800.0;
 
