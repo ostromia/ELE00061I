@@ -186,6 +186,16 @@ void loop() {
 		    double R = impedance;
 		    double L = impedance/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedance);
+
+		    // checking phase diff and Magnitude
+			sprintf(msg, "DEBUG | Phase: %.4f | Mag: %.0f\r\n", phase_diff, mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
+			// Calibrate phase difference
+			phase_diff += 5.05;
+
+
 		    // keeping phase difference in range (-PI - +PI)
 			if (phase_diff > M_PI) {
 			  phase_diff -= (2.0 * M_PI);
@@ -193,9 +203,7 @@ void loop() {
 			  phase_diff += (2.0 * M_PI);
 			}
 
-			sprintf(msg, "DEBUG | Phase: %.4f | Mag: %.0f\r\n", phase_diff, mag_Vout);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
+
 
 			// Print measurement
 			// Inductor
