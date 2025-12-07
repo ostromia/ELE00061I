@@ -136,7 +136,7 @@ void loop() {
 		    double rRef = 107.0;
 
 		    HAL_Delay(100);
-		    /*
+
 		    if (mode == 0) {
 		    	// if mode is OFF
 		    	// turn OFF the switch
@@ -150,10 +150,10 @@ void loop() {
 		    	// so Ref is 107
 		    	rRef = rRef_low;
 		    }
-			*/
+
 
 		    // Auto ranging
-		    /*
+
 		    if (mode == 0 && mag_Vout > range_limit) { // if signal is too strong
 		    	mode = 1;							// Turn ON the switch
 		    	HAL_Delay(100);
@@ -165,16 +165,16 @@ void loop() {
 		    	HAL_Delay(100);
 		    	continue;
 		    }
-			*/
+
 		    HAL_Delay(100);
-		    /*
+
 		    if (mag_Vout < 10.0) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue; // continue without phase difference calculation
 		        }
-			*/
+
 		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
 
 		    // freq through DUT
