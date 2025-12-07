@@ -169,7 +169,7 @@ void loop() {
 		    HAL_Delay(100);
 		    /*
 		    if (mag_Vout < 10.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout, checker);
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue; // continue without phase difference calculation
@@ -215,7 +215,14 @@ void loop() {
 			else if (phase_diff > (-M_PI_2 - t) && // P.D. is around -PI/2
 					 phase_diff < (-M_PI_2 + t))
 			{
-				sprintf(msg, "Type: Capacitor (C) | Phase:%.2f | %.2fF\r\n", phase_diff, C);
+				if (Cn > 999.9) // if C > 1uF
+					{
+					sprintf(msg, "Type: Capacitor (C) | Phase:%.2f | %.2fuF\r\n", phase_diff, Cu);	// printf in uF
+					}
+				else
+					{
+					sprintf(msg, "Type: Capacitor (C) | Phase:%.2f | %.2fnF\r\n", phase_diff, Cn);	// printf in nF
+					}
 			}
 
 			// Resistor
