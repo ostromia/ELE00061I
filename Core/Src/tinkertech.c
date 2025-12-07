@@ -94,7 +94,6 @@ void loop() {
 	  {		// For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
 		 	double dc_offset = (adc1_buffer[0] + adc1_buffer[32] + adc1_buffer[64] + adc1_buffer[96]) / 4.0;
-		 	double checker = checker + 1.0;
 		 	// taking 4 samples per period
 		 	// subtract dc_offset to omit the dc property
 
@@ -186,6 +185,8 @@ void loop() {
 		    double L = impedance/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedance);
 
+		    double Cu = C * 100000.0;
+		    double Cn = C * 100000000.0;
 
 		    // keeping phase difference in range (-PI - +PI)
 			if (phase_diff > M_PI) {
