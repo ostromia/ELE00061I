@@ -90,7 +90,6 @@ void loop() {
 		static int mode = 0;	// 0 = 4.7kOhm
 								// 1 = 107Ohm
 
-		static double checker = 0.0; // (Temporary check whether static work as intended or not)
 	 while (1)
 	  {		// For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
