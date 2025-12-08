@@ -70,13 +70,19 @@ void setup() {
 	                    64, // No. of samples = change if we use 64 version
 	                    DAC_ALIGN_12B_R); // right alignment which should be default
 
+	  HAL_Delay(100); // 1 sec delay for setup
+
 	  HAL_ADC_Start_DMA(&hadc1,	// adc1 handle
 			  	  	   (uint32_t*)adc1_buffer, // adc1 buffer table
 					   64); // 64 readings
 
+	  HAL_Delay(100); // 1 sec delay for setup
+
 	  HAL_ADC_Start_DMA(&hadc2,	// adc2 handle
 			  	  	   (uint32_t*)adc2_buffer,
 					   64);
+
+	  HAL_Delay(100); // 1 sec delay for setup
 
 	  HAL_TIM_Base_Start(&htim6); // starts timer
 
@@ -133,10 +139,10 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 107.0;
+		    double rRef = 4700.0;
 
 		    HAL_Delay(100);
-
+		    /*
 		    if (mode == 0) {
 		    	// if mode is OFF
 		    	// turn OFF the switch
@@ -150,11 +156,11 @@ void loop() {
 		    	// so Ref is 107
 		    	rRef = rRef_low;
 		    }
-
+			*/
 		    HAL_Delay(100);
 
 		    // Auto ranging
-
+		    /*
 		    if (mode == 0 && mag_Vout > range_limit) { // if signal is too strong
 		    	mode = 1;							// Turn ON the switch
 		    	HAL_Delay(100);
@@ -166,14 +172,15 @@ void loop() {
 		    	HAL_Delay(100);
 		    	continue;
 		    }
+		    */
 
-		    HAL_Delay(100);
+		    HAL_Delay(100); //
 
 		    if (mag_Vout < 10.0) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			continue; // continue without phase difference calculation
+			// continue; // continue without phase difference calculation
 		        }
 
 		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
@@ -182,12 +189,13 @@ void loop() {
 		    double freq = 10000.0;
 
 		    //calculating each RLC value for DUT
-		    double R = impedance;
+		    double R = impedance / 10;
 		    double L = impedance/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedance);
 
 		    double Cu = C * 1000000.0;
 		    double Cn = C * 1000000000.0;
+
 
 		    // keeping phase difference in range (-PI - +PI)
 			if (phase_diff > M_PI) {
@@ -197,15 +205,15 @@ void loop() {
 			}
 
 			// check circuit functionality
-			/*
-			sprintf(msg, "V_In: %.0f | V_Out: %.0f | Mode: %d\r\n", mag_Vbase, mag_Vout, mode);
+
+
+			sprintf(msg, "mag_Vbase: %.0f | mag_Vout: %.0f | ", mag_Vbase, mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue;
-			*/
+
 			// Print measurement
 			// Inductor
-
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
 				phase_diff < (M_PI_2 + t))
 			{
