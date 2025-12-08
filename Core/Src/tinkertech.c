@@ -62,31 +62,35 @@ void setup() {
 
 
 	// Start timer & DMA
+	HAL_DAC_Start_DMA(
+			&hdac1,                // dac handle
+			DAC_CHANNEL_1,         // dac channel
+			(uint32_t*)sine_table, // pointing sinewave table, type conversion (temporary)
+			64,                    // No. of samples = change if we use 64 version
+			DAC_ALIGN_12B_R
+	); // right alignment which should be default
 
+	HAL_Delay(100);
 
-	  HAL_DAC_Start_DMA(&hdac1, // dac handle
-	                    DAC_CHANNEL_1, // dac channel
-	                    (uint32_t*)sine_table, // pointing sinewave table, type conversion (temporary)
-	                    64, // No. of samples = change if we use 64 version
-	                    DAC_ALIGN_12B_R); // right alignment which should be default
+	HAL_ADC_Start_DMA(
+		&hadc1,	                // adc1 handle
+		(uint32_t*)adc1_buffer, // adc1 buffer table
+		64
+	); // 64 readings
 
-	  HAL_Delay(100); // 1 sec delay for setup
+	HAL_Delay(100);
 
-	  HAL_ADC_Start_DMA(&hadc1,	// adc1 handle
-			  	  	   (uint32_t*)adc1_buffer, // adc1 buffer table
-					   64); // 64 readings
+	HAL_ADC_Start_DMA(
+		&hadc2, // adc2 handle
+		(uint32_t*)adc2_buffer,
+		64
+	);
 
-	  HAL_Delay(100); // 1 sec delay for setup
+	HAL_Delay(100);
 
-	  HAL_ADC_Start_DMA(&hadc2,	// adc2 handle
-			  	  	   (uint32_t*)adc2_buffer,
-					   64);
+	HAL_TIM_Base_Start(&htim6); // starts timer
 
-	  HAL_Delay(100); // 1 sec delay for setup
-
-	  HAL_TIM_Base_Start(&htim6); // starts timer
-
-	  HAL_Delay(1000); // 1 sec delay for setup
+	HAL_Delay(1000);
 }
 
 
