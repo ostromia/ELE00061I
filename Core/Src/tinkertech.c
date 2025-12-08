@@ -138,7 +138,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 4700.0;
+		    double rRef = 107.0;
 
 		    HAL_Delay(100);
 		    /*
@@ -176,7 +176,7 @@ void loop() {
 		    HAL_Delay(100); //
 
 		    if (mag_Vout < 10.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f | Attempt:%.0f\r\n", mag_Vout);
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			// continue; // continue without phase difference calculation
