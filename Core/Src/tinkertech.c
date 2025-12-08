@@ -210,7 +210,15 @@ void loop() {
 			sprintf(msg, "mag_Vbase: %.0f | mag_Vout: %.0f | ", mag_Vbase, mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			continue;
+
+			sprintf(msg, "Vbase_sin: %.0f | Vbase_cos: %.0f | ", Vbase_sin, Vbase_cos);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
+			sprintf(msg, "Vout_sin: %.0f | Vout_cos: %.0f | ", Vout_sin, Vout_cos);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
 
 			// Print measurement
 			// Inductor
