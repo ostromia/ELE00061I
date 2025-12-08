@@ -93,7 +93,8 @@ void loop() {
 	 while (1)
 	  {		// For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
-		 	double dc_offset = (adc1_buffer[0] + adc1_buffer[16] + adc1_buffer[32] + adc1_buffer[48]) / 4.0;
+		 	double dc_offset1 = ((double)adc1_buffer[0] + (double)adc1_buffer[16] + (double)adc1_buffer[32] + (double)adc1_buffer[48]) / 4.0;
+		 	double dc_offset2 = ((double)adc2_buffer[0] + (double)adc2_buffer[16] + (double)adc2_buffer[32] + (double)adc2_buffer[48]) / 4.0;
 		 	// taking 4 samples per period
 		 	// subtract dc_offset to omit the dc property
 
@@ -133,7 +134,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 107.0;
+		    double rRef = 4700.0;
 
 		    HAL_Delay(100);
 		    /*
