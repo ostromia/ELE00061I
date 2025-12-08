@@ -188,7 +188,7 @@ void loop() {
 		    double freq = 10000.0;
 
 		    //calculating each RLC value for DUT
-		    double R = impedance / 10;
+		    double R = impedance;
 		    double L = impedance/(2.0 * M_PI * freq);
 		    double C = 1.0/(2.0 * M_PI * freq * impedance);
 
