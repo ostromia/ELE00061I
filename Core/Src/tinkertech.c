@@ -200,9 +200,6 @@ void loop() {
 			}
 
 			// check circuit functionality
-			sprintf(msg, "DC offset: %f| \r\n", dc_offset);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
 
 
 			sprintf(msg, "mag_Vbase: %f | mag_Vout: %f | \r\n", mag_Vbase, mag_Vout);
