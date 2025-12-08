@@ -33,10 +33,10 @@ const uint16_t sine_table[64] = {
 // volatile is for preventing random omitting from compiler
 
 // array of baseline reading
-volatile uint16_t adc1_buffer[64];
+uint16_t adc1_buffer[64];
 
 // array of DUT reading
-volatile uint16_t adc2_buffer[64];
+uint16_t adc2_buffer[64];
 
 // message to console
 char msg[100];
