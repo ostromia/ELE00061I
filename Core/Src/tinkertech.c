@@ -99,16 +99,16 @@ void loop() {
 		 	// subtract dc_offset to omit the dc property
 
 		    // Vbase = adc1
-		    double vbase_a0 = (double)adc1_buffer[0] - dc_offset;
-		    double vbase_a1 = (double)adc1_buffer[16] - dc_offset;
-		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset;
-		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset;
+		    double vbase_a0 = (double)adc1_buffer[0] - dc_offset1;
+		    double vbase_a1 = (double)adc1_buffer[16] - dc_offset1;
+		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset1;
+		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset1;
 
 		    // Vout = adc2
-		    double vout_a0 = (double)adc2_buffer[0] - dc_offset;
-		    double vout_a1 = (double)adc2_buffer[16] - dc_offset;
-		    double vout_a2 = (double)adc2_buffer[32] - dc_offset;
-		    double vout_a3 = (double)adc2_buffer[48] - dc_offset;
+		    double vout_a0 = (double)adc2_buffer[0] - dc_offset2;
+		    double vout_a1 = (double)adc2_buffer[16] - dc_offset2;
+		    double vout_a2 = (double)adc2_buffer[32] - dc_offset2;
+		    double vout_a3 = (double)adc2_buffer[48] - dc_offset2;
 
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
