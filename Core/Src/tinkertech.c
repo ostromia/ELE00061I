@@ -134,7 +134,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 4700.0;
+		    double rRef = 107.0;
 
 		    HAL_Delay(100);
 		    /*
@@ -201,7 +201,7 @@ void loop() {
 
 			// check circuit functionality
 
-
+			/*
 			sprintf(msg, "mag_Vbase: %f | mag_Vout: %f | \r\n", mag_Vbase, mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
@@ -213,7 +213,7 @@ void loop() {
 			sprintf(msg, "Vout_sin: %f | Vout_cos: %f | \r\n", Vout_sin, Vout_cos);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-
+			*/
 
 			// Print measurement
 			// Inductor
