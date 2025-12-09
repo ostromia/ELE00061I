@@ -55,7 +55,7 @@ void setup() {
 	lcd_set_cursor(RS, E, D4, D5, D6, D7, 0, 0);
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
-	HAL_TIM_Base_Start(&htim6); // starts timer
+
 
 	// Start timer & DMA
 	HAL_DAC_Start_DMA(
@@ -77,7 +77,10 @@ void setup() {
 		&hadc2, // adc2 handle
 		(uint32_t*)adc2_buffer,
 		64
-	);
+		);
+
+		HAL_TIM_Base_Start(&htim6); // starts timer
+
 
 
 	HAL_Delay(1000);
