@@ -104,12 +104,24 @@ void loop() {
 		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset1;
 		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset1;
 
+
+
 		    // Vout = adc2
+
+		    if (dc_offset2 > 10.0) {
 		    double vout_a0 = (double)adc2_buffer[0] - dc_offset2;
 		    double vout_a1 = (double)adc2_buffer[16] - dc_offset2;
 		    double vout_a2 = (double)adc2_buffer[32] - dc_offset2;
 		    double vout_a3 = (double)adc2_buffer[48] - dc_offset2;
+		    }
 
+		    else {
+		    	// if dc_offset is noise, ignore impedance
+		    	double vout_a0 = 0.0;
+		    	double vout_a1 = 0.0;
+		    	double vout_a2 = 0.0;
+		    	double vout_a3 = 0.0;
+		    }
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
 		    double Vbase_cos = vbase_a1 - vbase_a3;
