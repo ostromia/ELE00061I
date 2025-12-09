@@ -175,7 +175,7 @@ void loop() {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			// continue; // continue without phase difference calculation
+			continue; // continue without phase difference calculation
 		        }
 
 		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
