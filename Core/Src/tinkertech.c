@@ -175,13 +175,14 @@ void loop() {
 
 		    HAL_Delay(100); //
 
+		    /*
 		    if (mag_Vout < 10.0) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 			continue; // continue without phase difference calculation
 		        }
-
+			*/
 		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
 
 		    // freq through DUT
@@ -209,7 +210,7 @@ void loop() {
 			sprintf(msg, "mag_Vbase: %f | mag_Vout: %f | \r\n", mag_Vbase, mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			/*
+
 			sprintf(msg, "Vbase_sin: %f | Vbase_cos: %f | \r\n", Vbase_sin, Vbase_cos);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
@@ -217,7 +218,7 @@ void loop() {
 			sprintf(msg, "Vout_sin: %f | Vout_cos: %f | \r\n", Vout_sin, Vout_cos);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			*/
+
 
 			// Print measurement
 			// Inductor
