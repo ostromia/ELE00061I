@@ -55,6 +55,7 @@ void setup() {
 	lcd_set_cursor(RS, E, D4, D5, D6, D7, 0, 0);
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
+	HAL_TIM_Base_Start(&htim6); // starts timer
 
 
 	// Start timer & DMA
@@ -79,7 +80,6 @@ void setup() {
 		64
 		);
 
-		HAL_TIM_Base_Start(&htim6); // starts timer
 
 
 

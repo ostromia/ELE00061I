@@ -1,6 +1,6 @@
 #MicroXplorer Configuration settings - do not modify
 ADC1.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_1
-ADC1.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV2
+ADC1.ClockPrescaler=ADC_CLOCK_ASYNC_DIV1
 ADC1.DMAContinuousRequests=ENABLE
 ADC1.ExternalTrigConv=ADC_EXTERNALTRIGCONV_T6_TRGO
 ADC1.IPParameters=SubFamily,Rank-0\#ChannelRegularConversion,master,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,SamplingTimeOPAMP-0\#ChannelRegularConversion,OffsetNumber-0\#ChannelRegularConversion,Offset-0\#ChannelRegularConversion,NbrOfConversionFlag,ClockPrescaler,ExternalTrigConv,DMAContinuousRequests
@@ -13,10 +13,9 @@ ADC1.SamplingTimeOPAMP-0\#ChannelRegularConversion=ADC_SAMPLETIME_61CYCLES_5
 ADC1.SubFamily=STM32F303x8
 ADC1.master=1
 ADC2.Channel-0\#ChannelRegularConversion=ADC_CHANNEL_2
-ADC2.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV2
 ADC2.DMAContinuousRequests=ENABLE
 ADC2.ExternalTrigConv=ADC_EXTERNALTRIGCONV_T6_TRGO
-ADC2.IPParameters=SubFamily,Rank-0\#ChannelRegularConversion,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,SamplingTimeOPAMP-0\#ChannelRegularConversion,OffsetNumber-0\#ChannelRegularConversion,Offset-0\#ChannelRegularConversion,NbrOfConversionFlag,ClockPrescaler,ExternalTrigConv,DMAContinuousRequests
+ADC2.IPParameters=SubFamily,Rank-0\#ChannelRegularConversion,Channel-0\#ChannelRegularConversion,SamplingTime-0\#ChannelRegularConversion,SamplingTimeOPAMP-0\#ChannelRegularConversion,OffsetNumber-0\#ChannelRegularConversion,Offset-0\#ChannelRegularConversion,NbrOfConversionFlag,ExternalTrigConv,DMAContinuousRequests
 ADC2.NbrOfConversionFlag=1
 ADC2.Offset-0\#ChannelRegularConversion=0
 ADC2.OffsetNumber-0\#ChannelRegularConversion=ADC_OFFSET_NONE
