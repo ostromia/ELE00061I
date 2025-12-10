@@ -29,10 +29,10 @@ static const uint16_t sine_table[64] = {
 // volatile is for preventing random omitting from compiler
 
 // array of baseline reading
-volatile uint16_t adc1_buffer[64];
+uint16_t adc1_buffer[64];
 
 // array of DUT reading
-volatile uint16_t adc2_buffer[64];
+uint16_t adc2_buffer[64];
 
 // message to console
 char msg[100];
@@ -102,18 +102,18 @@ void loop() {
 		 	// subtract dc_offset to omit the dc property
 
 		    // Vbase = adc1
-		    double vbase_a0 = (double)adc1_buffer[0] // - dc_offset1;
-		    double vbase_a1 = (double)adc1_buffer[16] // - dc_offset1;
-		    double vbase_a2 = (double)adc1_buffer[32] // - dc_offset1;
-		    double vbase_a3 = (double)adc1_buffer[48] // - dc_offset1;
+		    double vbase_a0 = (double)adc1_buffer[0]; // - dc_offset1;
+		    double vbase_a1 = (double)adc1_buffer[16]; // - dc_offset1;
+		    double vbase_a2 = (double)adc1_buffer[32]; // - dc_offset1;
+		    double vbase_a3 = (double)adc1_buffer[48]; // - dc_offset1;
 
 
 
 		    // Vout = adc2
-		    double vout_a0 = (double)adc2_buffer[0] // - dc_offset2;
-		    double vout_a1 = (double)adc2_buffer[16] // - dc_offset2;
-		    double vout_a2 = (double)adc2_buffer[32] // - dc_offset2;
-		    double vout_a3 = (double)adc2_buffer[48] // - dc_offset2;
+		    double vout_a0 = (double)adc2_buffer[0]; // - dc_offset2;
+		    double vout_a1 = (double)adc2_buffer[16]; // - dc_offset2;
+		    double vout_a2 = (double)adc2_buffer[32]; // - dc_offset2;
+		    double vout_a3 = (double)adc2_buffer[48]; // - dc_offset2;
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
 		    double Vbase_cos = vbase_a1 - vbase_a3;
@@ -179,7 +179,7 @@ void loop() {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			continue; // continue without phase difference calculation
+			//continue; // continue without phase difference calculation
 		        }
 
 		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
@@ -209,7 +209,7 @@ void loop() {
 			sprintf(msg, "mag_Vbase: %f | mag_Vout: %f | \r\n", mag_Vbase, mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			/*
+
 			sprintf(msg, "Vbase_sin: %f | Vbase_cos: %f | \r\n", Vbase_sin, Vbase_cos);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
@@ -217,10 +217,18 @@ void loop() {
 			sprintf(msg, "Vout_sin: %f | Vout_cos: %f | \r\n", Vout_sin, Vout_cos);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			*/
 
+			sprintf(msg, "Raw ADC Value: %d | Mag: %.2f\r\n", adc2_buffer[0], mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
+			sprintf(msg, "Idx0: %d | Idx32: %d | Diff: %.0f\r\n",
+			        adc2_buffer[0], adc2_buffer[32], (double)(adc2_buffer[0] - adc2_buffer[32]));
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
 			// Print measurement
 			// Inductor
+
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
 				phase_diff < (M_PI_2 + t))
 			{
