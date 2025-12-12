@@ -42,6 +42,7 @@ char msg[100];
 #define SWITCH_PIN Switch_Pin
 
 void setup() {
+
 	GPIO RS = { LCD_RS_GPIO_Port, LCD_RS_Pin };
 	GPIO E  = { LCD_E_GPIO_Port,  LCD_E_Pin  };
 	GPIO D4 = { LCD_D4_GPIO_Port, LCD_D4_Pin };
@@ -55,9 +56,12 @@ void setup() {
 	lcd_set_cursor(RS, E, D4, D5, D6, D7, 0, 0);
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
+<<<<<<< Updated upstream
 	HAL_TIM_Base_Start(&htim6); // starts timer
 
 
+=======
+>>>>>>> Stashed changes
 	// Start timer & DMA
 	HAL_DAC_Start_DMA(
 			&hdac1,                // dac handle
@@ -138,7 +142,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 107.0;
+		    double rRef = 126.0; // 126 is real measured value
 
 		    HAL_Delay(100);
 		    /*
@@ -198,12 +202,13 @@ void loop() {
 
 
 		    // keeping phase difference in range (-PI - +PI)
-			if (phase_diff > M_PI) {
+			/*
+		    if (phase_diff > M_PI) {
 			  phase_diff -= (2.0 * M_PI);
 			} else if (phase_diff < -M_PI) {
 			  phase_diff += (2.0 * M_PI);
 			}
-
+			*/
 			// check circuit functionality
 
 
@@ -219,7 +224,26 @@ void loop() {
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 
+<<<<<<< Updated upstream
 
+=======
+			sprintf(msg, "Raw ADC1 Value: %d | Mag: %.2f\r\n", adc1_buffer[0], mag_Vbase);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
+			sprintf(msg, "Raw ADC2 Value: %d | Mag: %.2f\r\n", adc2_buffer[0], mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+
+			sprintf(msg, "Phase: %f\r\n",  phase_diff);
+						HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+						HAL_Delay(500);
+
+			sprintf(msg, "Idx0: %d | Idx32: %d | Diff: %.0f\r\n",
+			        adc2_buffer[0], adc2_buffer[32], (double)(adc2_buffer[0] - adc2_buffer[32]));
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+>>>>>>> Stashed changes
 			// Print measurement
 			// Inductor
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
