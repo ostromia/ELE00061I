@@ -56,12 +56,9 @@ void setup() {
 	lcd_set_cursor(RS, E, D4, D5, D6, D7, 0, 0);
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
-<<<<<<< Updated upstream
 	HAL_TIM_Base_Start(&htim6); // starts timer
 
 
-=======
->>>>>>> Stashed changes
 	// Start timer & DMA
 	HAL_DAC_Start_DMA(
 			&hdac1,                // dac handle
@@ -224,9 +221,7 @@ void loop() {
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
 
-<<<<<<< Updated upstream
 
-=======
 			sprintf(msg, "Raw ADC1 Value: %d | Mag: %.2f\r\n", adc1_buffer[0], mag_Vbase);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
@@ -243,7 +238,6 @@ void loop() {
 			        adc2_buffer[0], adc2_buffer[32], (double)(adc2_buffer[0] - adc2_buffer[32]));
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
->>>>>>> Stashed changes
 			// Print measurement
 			// Inductor
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
