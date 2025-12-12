@@ -124,13 +124,18 @@ void loop() {
 
 		    double Vdut_sin = Vbase_sin - Vout_sin;
 		    double Vdut_cos = Vbase_cos - Vout_cos;
+
+		    // Since I = V_out / R_ref
+		    double I_sin = Vout_sin;
+		    double I_cos = Vout_cos;
+
 		    // calculating phase of each wave
 		    // atan2: Returns the principal value of the arc tangent of y/x, expressed in radians.
-		    double phase_Vbase = atan2(Vbase_sin, Vbase_cos); // atan2(sin property, cos property)
-		    double phase_Vout = atan2(Vout_sin, Vout_cos); // atan2(sin property, cos property)
+		    double phase_Vdut = atan2(Vdut_sin, Vdut_cos);
+		    double phase_I = atan2(I_sin, I_cos);
 
 		    // final phase diff
-		    double phase_diff = phase_Vout - phase_Vbase;
+		    double phase_diff = phase_Vdut - phase_I;
 
 		    // Magnitude (amplitude) of Vout peak to peak
 		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
@@ -178,15 +183,10 @@ void loop() {
 
 		    HAL_Delay(100); //
 
-		    /*
-		    if (mag_Vout < 10.0) {
-			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-			continue; // continue without phase difference calculation
-		        }
-			*/
-		    double impedance = rRef * (mag_Vout / mag_Vdut);	// Impedance calculation
+
+
+
+		    double impedance = rRef * (mag_Vdut / mag_Vout);	// Impedance calculation
 
 		    // freq through DUT
 		    double freq = 10000.0;
@@ -201,13 +201,12 @@ void loop() {
 
 
 		    // keeping phase difference in range (-PI - +PI)
-			/*
 		    if (phase_diff > M_PI) {
 			  phase_diff -= (2.0 * M_PI);
 			} else if (phase_diff < -M_PI) {
 			  phase_diff += (2.0 * M_PI);
 			}
-			*/
+
 			// check circuit functionality
 
 
@@ -240,6 +239,14 @@ void loop() {
 			        adc2_buffer[0], adc2_buffer[32], (double)(adc2_buffer[0] - adc2_buffer[32]));
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
+
+		    if (mag_Vout < 10.0) {
+			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
+			HAL_Delay(500);
+			continue; // continue printing
+		        }
+
 			// Print measurement
 			// Inductor
 			if (phase_diff > (M_PI_2 - t) && // P.D. is around +PI/2
