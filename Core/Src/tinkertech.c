@@ -103,18 +103,18 @@ void loop() {
 		 	// subtract dc_offset to omit the dc property
 
 		    // Vbase = adc1
-		    double vbase_a0 = (double)adc1_buffer[0] - dc_offset1;
-		    double vbase_a1 = (double)adc1_buffer[16] - dc_offset1;
-		    double vbase_a2 = (double)adc1_buffer[32] - dc_offset1;
-		    double vbase_a3 = (double)adc1_buffer[48] - dc_offset1;
+		    double vbase_a0 = (double)adc1_buffer[0]; //- dc_offset1;
+		    double vbase_a1 = (double)adc1_buffer[16]; //- dc_offset1;
+		    double vbase_a2 = (double)adc1_buffer[32]; //- dc_offset1;
+		    double vbase_a3 = (double)adc1_buffer[48]; //- dc_offset1;
 
 
 
 		    // Vout = adc2
-		    double vout_a0 = (double)adc2_buffer[0] - dc_offset2;
-		    double vout_a1 = (double)adc2_buffer[16] - dc_offset2;
-		    double vout_a2 = (double)adc2_buffer[32] - dc_offset2;
-		    double vout_a3 = (double)adc2_buffer[48] - dc_offset2;
+		    double vout_a0 = (double)adc2_buffer[0]; //- dc_offset2;
+		    double vout_a1 = (double)adc2_buffer[16]; //- dc_offset2;
+		    double vout_a2 = (double)adc2_buffer[32]; //- dc_offset2;
+		    double vout_a3 = (double)adc2_buffer[48]; //- dc_offset2;
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = vbase_a0 - vbase_a2;
 		    double Vbase_cos = vbase_a1 - vbase_a3;
@@ -122,6 +122,8 @@ void loop() {
 		    double Vout_sin = vout_a0 - vout_a2;
 		    double Vout_cos = vout_a1 - vout_a3;
 
+		    double Vdut_sin = Vbase_sin - Vout_sin;
+		    double Vdut_cos = Vbase_cos - Vout_cos;
 		    // calculating phase of each wave
 		    // atan2: Returns the principal value of the arc tangent of y/x, expressed in radians.
 		    double phase_Vbase = atan2(Vbase_sin, Vbase_cos); // atan2(sin property, cos property)
@@ -133,7 +135,7 @@ void loop() {
 		    // Magnitude (amplitude) of Vout peak to peak
 		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
-
+		    double mag_Vdut = sqrt((Vdut_sin*Vdut_sin)+(Vdut_cos*Vdut_cos));
 		    // Reference resistors
 		    const double rRef_high = 4700.0;	// when switch is OFF
 		    const double rRef_low = 107.0;	// when switch is ON
@@ -184,7 +186,7 @@ void loop() {
 			continue; // continue without phase difference calculation
 		        }
 			*/
-		    double impedance = rRef * (mag_Vbase / mag_Vout);	// Impedance calculation
+		    double impedance = rRef * (mag_Vout / mag_Vdut);	// Impedance calculation
 
 		    // freq through DUT
 		    double freq = 10000.0;
