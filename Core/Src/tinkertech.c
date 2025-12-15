@@ -96,7 +96,22 @@ void loop() {
 								// 1 = 107Ohm
 
 	 while (1)
-	  {		// For better reading, dc_offset is produced which replacing 2048
+	  {
+
+		 if(flag == 1) {
+			 flag = 0;
+
+			 int index[] = {0, 16, 32, 48};
+			 uint16_t adc1_idx[4];
+			 uint16_t adc2_idx[4];
+
+			 for(int j=0; j<0; j++) {
+				 int k = index[j];
+				 adc1_idx[j] = process_buffer[k] & 0xFFFF;
+				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF;
+			 }
+		 }
+		 // For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
 		 	double dc_offset1 = ((double)adc1_buffer[0] + (double)adc1_buffer[16] + (double)adc1_buffer[32] + (double)adc1_buffer[48]) / 4.0;
 		 	double dc_offset2 = ((double)adc2_buffer[0] + (double)adc2_buffer[16] + (double)adc2_buffer[32] + (double)adc2_buffer[48]) / 4.0;
