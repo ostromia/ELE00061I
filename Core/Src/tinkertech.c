@@ -66,17 +66,16 @@ void setup() {
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
 
-
-
+	__HAL_RCC_DAC1_CLK_ENABLE();
+	__HAL_RCC_TIM6_CLK_ENABLE();
+	__HAL_RCC_ADC12_CLK_ENABLE();
+	__HAL_RCC_DMA1_CLK_ENABLE();
 	// Start timer & DMA
-	HAL_DAC_Start_DMA(
-			&hdac1,                // dac handle
-			DAC_CHANNEL_1,         // dac channel
-			(uint32_t*)sine_table, // pointing sinewave table, type conversion (temporary)
-			64,                    // No. of samples = change if we use 64 version
-			DAC_ALIGN_12B_R
-	); // right alignment which should be default
 
+	HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+	HAL_ADCEx_Calibration_Start(&hadc2, ADC_SINGLE_ENDED);
+
+	HAL_DAC_Start_DMA(&hdac1, DAC_CHANNEL_1, (uint32_t*)sine_table, 64, DAC_ALIGN_12B_R);
 
 	HAL_ADCEx_MultiModeStart_DMA(
 	    &hadc1,
@@ -143,7 +142,7 @@ void loop() {
 		    const double rRef_low = 107.0;	// when switch is ON
 
 		    // rRef is not determined yet
-		    double rRef = 126.0; // 126 is real measured value
+		    double rRef = 4700.0; // 126 is real measured value
 
 		    /*
 		    if (mode == 0) {
@@ -205,12 +204,12 @@ void loop() {
 
 			// check circuit functionality
 
-;
+
 		    if (mag_Vout < 10.0) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			// continue; // continue printing
+			continue; // continue printing
 		        }
 
 			// Print measurement
@@ -250,9 +249,8 @@ void loop() {
 				sprintf(msg, "Type: Other Component | Phase: %.2f | Impedance:%.2f\r\n ", phase_diff, impedance);
 			}
 
-			sprintf(msg, "V: %d, I: %d\r\n", adc1_idx[0], adc2_idx[0]);
 
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
+			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			// print every 500ms
 			HAL_Delay(500);
 
