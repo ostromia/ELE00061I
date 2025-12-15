@@ -87,6 +87,8 @@ void setup() {
 	); // 64 readings
 
 
+	sprintf(msg, "System Booting\r\n");
+	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 }
 
 
@@ -94,6 +96,8 @@ void setup() {
 void loop() {
  	HAL_Delay(100);
 
+ 	sprintf(msg, "Entering Loop... Waiting for ADC\r\n");
+ 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 	 while (1)
 	  {
 
