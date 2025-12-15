@@ -32,6 +32,8 @@ volatile uint32_t adc_buffer[64];
 volatile uint32_t process_buffer[64];
 volatile int flag = 0;
 
+uint16_t adc1_idx[4];
+uint16_t adc2_idx[4];
 // message to console
 char msg[100];
 
@@ -102,8 +104,7 @@ void loop() {
 			 flag = 0;
 
 			 int index[] = {0, 16, 32, 48};
-			 uint16_t adc1_idx[4];
-			 uint16_t adc2_idx[4];
+
 
 			 for(int j=0; j<4; j++) {
 				 int k = index[j];
@@ -114,7 +115,7 @@ void loop() {
 		 	HAL_Delay(100);
 
 		    // calculating sin property and cos property for each wave
-		    double Vbase_sin = (double)adc1_idx[0] - (double)adc1_idx[2]
+		    double Vbase_sin = (double)adc1_idx[0] - (double)adc1_idx[2];
 			double Vbase_cos = (double)adc1_idx[1] - (double)adc1_idx[3];
 
 		    double Vout_sin = (double)adc2_idx[0] - (double)adc2_idx[2];
@@ -184,7 +185,7 @@ void loop() {
 
 		    double impedance = 0.0;
 		    if (mag_Vout > 0.1){
-		    double impedance = rRef * (mag_Vdut / mag_Vout);	// Impedance calculation
+		     impedance = rRef * (mag_Vdut / mag_Vout);	// Impedance calculation
 		    }
 		    // freq through DUT
 		    double freq = 10000.0;
@@ -207,37 +208,7 @@ void loop() {
 
 			// check circuit functionality
 
-
-			sprintf(msg, "mag_Vbase: %f | mag_Vout: %f | \r\n", mag_Vbase, mag_Vout);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
-			sprintf(msg, "Vbase_sin: %f | Vbase_cos: %f | \r\n", Vbase_sin, Vbase_cos);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
-			sprintf(msg, "Vout_sin: %f | Vout_cos: %f | \r\n", Vout_sin, Vout_cos);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
-
-			sprintf(msg, "Raw ADC1 Value: %d | Mag: %.2f\r\n", adc1_buffer[0], mag_Vbase);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
-			sprintf(msg, "Raw ADC2 Value: %d | Mag: %.2f\r\n", adc2_buffer[0], mag_Vout);
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
-			sprintf(msg, "Phase: %f\r\n",  phase_diff);
-						HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-						HAL_Delay(500);
-
-			sprintf(msg, "Idx0: %d | Idx32: %d | Diff: %.0f\r\n",
-			        adc2_buffer[0], adc2_buffer[32], (double)(adc2_buffer[0] - adc2_buffer[32]));
-			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
-			HAL_Delay(500);
-
+;
 		    if (mag_Vout < 10.0) {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
