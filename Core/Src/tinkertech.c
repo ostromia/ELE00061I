@@ -37,12 +37,13 @@ uint16_t adc2_idx[4];
 // message to console
 char msg[100];
 
+// callback when adc buffer is full
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
 	if (hadc -> Instance == ADC1) {
 		for(int i=0; i<64; i++) {
-			process_buffer[i] = adc_buffer[i];
+			process_buffer[i] = adc_buffer[i]; // fill process buffer with adc buffer
 		}
-		flag = 1;
+		flag = 1; // go ahead with calculation
 	}
 }
 
@@ -101,13 +102,13 @@ void loop() {
 		 if(flag == 1) {
 			 flag = 0;
 
-			 int index[] = {0, 16, 32, 48};
+			 int index[] = {0, 16, 32, 48}; // 4 readings per cycle
 
-
+			 // wait until 1 full cycle is done
 			 for(int j=0; j<4; j++) {
 				 int k = index[j];
-				 adc1_idx[j] = process_buffer[k] & 0xFFFF;
-				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF;
+				 adc1_idx[j] = process_buffer[k] & 0xFFFF; // adc1 stores its value from 1st - 16th bit
+				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF; // adc2 stores its value from 17th bit
 			 }
 
 
@@ -209,7 +210,7 @@ void loop() {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			continue; // continue printing
+			continue; // DO NOT continue printing
 		        }
 
 			// Print measurement
