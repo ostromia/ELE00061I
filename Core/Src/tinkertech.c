@@ -29,9 +29,20 @@ static const uint16_t sine_table[64] = {
 // volatile is for preventing random omitting from compiler
 
 volatile uint32_t adc_buffer[64];
+volatile uint32_t process_buffer[64];
+volatile int flag = 0;
 
 // message to console
 char msg[100];
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
+	if (hadc -> Instance == ADC1) {
+		for(int i=0; i<64; i++) {
+			process_buffer[i] = adc_buffer[i];
+		}
+		flag = 1;
+	}
+}
 
 // Which pin are we using for switch?
 #define SWITCH_PORT GPIOA
