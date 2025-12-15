@@ -111,31 +111,17 @@ void loop() {
 				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF;
 			 }
 		 }
-		 // For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
 
-		    // Vbase = adc1
-		    double vbase_a0 = (double)adc1_buffer[0]; //- dc_offset1;
-		    double vbase_a1 = (double)adc1_buffer[16]; //- dc_offset1;
-		    double vbase_a2 = (double)adc1_buffer[32]; //- dc_offset1;
-		    double vbase_a3 = (double)adc1_buffer[48]; //- dc_offset1;
-
-
-
-		    // Vout = adc2
-		    double vout_a0 = (double)adc2_buffer[0]; //- dc_offset2;
-		    double vout_a1 = (double)adc2_buffer[16]; //- dc_offset2;
-		    double vout_a2 = (double)adc2_buffer[32]; //- dc_offset2;
-		    double vout_a3 = (double)adc2_buffer[48]; //- dc_offset2;
 		    // calculating sin property and cos property for each wave
-		    double Vbase_sin = vbase_a0 - vbase_a2;
-		    double Vbase_cos = vbase_a1 - vbase_a3;
+		    double Vbase_sin = (double)adc1_idx[0] - (double)adc1_idx[2]
+			double Vbase_cos = (double)adc1_idx[1] - (double)adc1_idx[3];
 
-		    double Vout_sin = vout_a0 - vout_a2;
-		    double Vout_cos = vout_a1 - vout_a3;
+		    double Vout_sin = (double)adc2_idx[0] - (double)adc2_idx[2];
+		    double Vout_cos = (double)adc2_idx[1] - (double)adc2_idx[3];
 
-		    double Vdut_sin = Vbase_sin - Vout_sin;
-		    double Vdut_cos = Vbase_cos - Vout_cos;
+		    double Vdut_sin = Vbase_sin;
+		    double Vdut_cos = Vbase_cos;
 
 		    // Since I = V_out / R_ref
 		    double I_sin = Vout_sin;
