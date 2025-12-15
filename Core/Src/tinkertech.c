@@ -79,8 +79,8 @@ void setup() {
 	HAL_ADC_Start(&hadc2);
 
 	HAL_ADC_Start_DMA(
-		&hadc1,	                // adc1 handle
-		(uint32_t*)adc1_buffer, // adc1 buffer table
+		&hadc1,	                // adc handle
+		(uint32_t*)adc_buffer, // adc buffer table
 		64
 	); // 64 readings
 
@@ -105,7 +105,7 @@ void loop() {
 			 uint16_t adc1_idx[4];
 			 uint16_t adc2_idx[4];
 
-			 for(int j=0; j<0; j++) {
+			 for(int j=0; j<4; j++) {
 				 int k = index[j];
 				 adc1_idx[j] = process_buffer[k] & 0xFFFF;
 				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF;
@@ -113,10 +113,6 @@ void loop() {
 		 }
 		 // For better reading, dc_offset is produced which replacing 2048
 		 	HAL_Delay(100);
-		 	double dc_offset1 = ((double)adc1_buffer[0] + (double)adc1_buffer[16] + (double)adc1_buffer[32] + (double)adc1_buffer[48]) / 4.0;
-		 	double dc_offset2 = ((double)adc2_buffer[0] + (double)adc2_buffer[16] + (double)adc2_buffer[32] + (double)adc2_buffer[48]) / 4.0;
-		 	// taking 4 samples per period
-		 	// subtract dc_offset to omit the dc property
 
 		    // Vbase = adc1
 		    double vbase_a0 = (double)adc1_buffer[0]; //- dc_offset1;
