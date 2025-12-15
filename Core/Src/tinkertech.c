@@ -28,11 +28,7 @@ static const uint16_t sine_table[64] = {
 
 // volatile is for preventing random omitting from compiler
 
-// array of baseline reading
-volatile uint16_t adc1_buffer[64];
-
-// array of DUT reading
-volatile uint16_t adc2_buffer[64];
+volatile uint32_t adc_buffer[64];
 
 // message to console
 char msg[100];
@@ -68,20 +64,14 @@ void setup() {
 			DAC_ALIGN_12B_R
 	); // right alignment which should be default
 
+
+	HAL_ADC_Start(&hadc2);
+
 	HAL_ADC_Start_DMA(
 		&hadc1,	                // adc1 handle
 		(uint32_t*)adc1_buffer, // adc1 buffer table
 		64
 	); // 64 readings
-
-
-	HAL_ADC_Start_DMA(
-		&hadc2, // adc2 handle
-		(uint32_t*)adc2_buffer,
-		64
-		);
-
-
 
 
 	HAL_Delay(1000);
