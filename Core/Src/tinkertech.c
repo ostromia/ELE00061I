@@ -65,7 +65,7 @@ void setup() {
 	lcd_set_cursor(RS, E, D4, D5, D6, D7, 0, 0);
 	lcd_write_string(RS, E, D4, D5, D6, D7, "Hello World!");
 
-	HAL_TIM_Base_Start(&htim6); // starts timer
+
 
 
 	// Start timer & DMA
@@ -78,14 +78,12 @@ void setup() {
 	); // right alignment which should be default
 
 
-	HAL_ADC_Start(&hadc2);
-
-	HAL_ADC_Start_DMA(
-		&hadc1,	                // adc handle
-		(uint32_t*)adc_buffer, // adc buffer table
-		64
-	); // 64 readings
-
+	HAL_ADCEx_MultiModeStart_DMA(
+	    &hadc1,
+	    (uint32_t*)adc_buffer,
+	    64
+	);// 64 readings
+	HAL_TIM_Base_Start(&htim6); // starts timer
 
 	sprintf(msg, "System Booting\r\n");
 	HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
