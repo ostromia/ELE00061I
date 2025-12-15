@@ -87,15 +87,12 @@ void setup() {
 	); // 64 readings
 
 
-	HAL_Delay(1000);
 }
 
 
 
 void loop() {
-	 	 // static: variable keeps its value after function call
-		static int mode = 0;	// 0 = 4.7kOhm
-								// 1 = 107Ohm
+ 	HAL_Delay(100);
 
 	 while (1)
 	  {
@@ -111,8 +108,8 @@ void loop() {
 				 adc1_idx[j] = process_buffer[k] & 0xFFFF;
 				 adc2_idx[j] = (process_buffer[k] >> 16) & 0xFFFF;
 			 }
-		 }
-		 	HAL_Delay(100);
+
+
 
 		    // calculating sin property and cos property for each wave
 		    double Vbase_sin = (double)adc1_idx[0] - (double)adc1_idx[2];
@@ -146,7 +143,6 @@ void loop() {
 		    // rRef is not determined yet
 		    double rRef = 126.0; // 126 is real measured value
 
-		    HAL_Delay(100);
 		    /*
 		    if (mode == 0) {
 		    	// if mode is OFF
@@ -162,7 +158,6 @@ void loop() {
 		    	rRef = rRef_low;
 		    }
 			*/
-		    HAL_Delay(100);
 
 		    // Auto ranging
 		    /*
@@ -179,7 +174,7 @@ void loop() {
 		    }
 		    */
 
-		    HAL_Delay(100); //
+
 
 
 
@@ -213,7 +208,7 @@ void loop() {
 			sprintf(msg, "Type: No Component (Open) | Magnitude: %.2f\r\n", mag_Vout);
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 100);
 			HAL_Delay(500);
-			continue; // continue printing
+			// continue; // continue printing
 		        }
 
 			// Print measurement
@@ -253,11 +248,13 @@ void loop() {
 				sprintf(msg, "Type: Other Component | Phase: %.2f | Impedance:%.2f\r\n ", phase_diff, impedance);
 			}
 
+			sprintf(msg, "V: %d, I: %d\r\n", adc1_idx[0], adc2_idx[0]);
+
 			HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 200);
 			// print every 500ms
 			HAL_Delay(500);
 
-
+		 }
 
 	  }
 
