@@ -136,7 +136,6 @@ void loop() {
 		    double phase_diff = phase_Vdut - phase_I;
 
 		    // Magnitude (amplitude) of Vout peak to peak
-		    double mag_Vbase = sqrt((Vbase_sin*Vbase_sin)+(Vbase_cos*Vbase_cos));
 		    double mag_Vout = sqrt((Vout_sin*Vout_sin)+(Vout_cos*Vout_cos));
 		    double mag_Vdut = sqrt((Vdut_sin*Vdut_sin)+(Vdut_cos*Vdut_cos));
 		    // Reference resistors
@@ -183,9 +182,10 @@ void loop() {
 
 
 
-
+		    double impedance = 0.0;
+		    if (mag_Vout > 0.1){
 		    double impedance = rRef * (mag_Vdut / mag_Vout);	// Impedance calculation
-
+		    }
 		    // freq through DUT
 		    double freq = 10000.0;
 
